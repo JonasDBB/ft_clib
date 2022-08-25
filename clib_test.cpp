@@ -1,6 +1,3 @@
-//
-// Created by Jonas Bennink bolt on 8/19/22.
-//
 #include <gtest/gtest.h>
 #include <cerrno>
 #include <climits>

@@ -146,13 +146,13 @@ void ft_bzero(void* s, size_t n) {
     ft_memset(s, 0, n);
 }
 
-char* ft_strchr(char* s, int c) {
+char* ft_strchr(const char *s, int c) {
     for (; *s && *s != c; ++s);
-    return *s == c ? s : NULL;
+    return *s == c ? (char*)s : NULL;
 }
 
-char* ft_strrchr(char* s, int c) {
-    char* t = s;
+char* ft_strrchr(const char *s, int c) {
+    char* t = (char*)s;
     for (; *t; ++t);
     for (; t != s && *t != c; --t);
     return *t == c ? t : NULL;

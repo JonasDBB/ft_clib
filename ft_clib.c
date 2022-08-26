@@ -195,7 +195,7 @@ static bool is_in_base(char c, int base) {
 }
 
 long ft_strtol(const char* str, char** endptr, int base) {
-    if (base != 0 && (base < 2 || base > 36) || !str) {
+    if ((base != 0 && (base < 2 || base > 36)) || !str) {
         errno = EINVAL;
         return 0;
     }

@@ -118,6 +118,6 @@ bool ft_isspace(char c);
  * base 0 will identify base 10 (no special start), 8 (start with 0) or base 16 (start with 0x)
  * @return converted value or LONG_MAX / LONG_MIN in case of over- / underflow
  */
-long ft_strtol(const char *str, char **endptr, int base) __attribute__((nonnull(1)));
+long ft_strtol(const char *str, char **endptr, int base);
 
 #endif

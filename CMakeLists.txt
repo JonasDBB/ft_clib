@@ -11,12 +11,19 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -Wextra -g3 -fsanitize=address")
-set(CMAKE_LINKER_FLAGS)
-
 enable_testing()
 
 add_library(ft_clib ft_clib.c)
+target_compile_options(ft_clib PUBLIC
+		-Wall
+		-Werror
+		-Wextra
+		-g3
+		-fsanitize=address
+		)
+target_link_options(ft_clib PUBLIC
+		-fsanitize=address
+)
 
 add_executable(
 		clib_test

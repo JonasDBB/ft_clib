@@ -32,9 +32,7 @@
  * @param ... variadic arguments
  */
 void log_func(const char* file, const char* func, int line, const char* fmt, ...);
-#define LOG(fmt, ...) { \
-    log_func(__FILENAME__, __FUNCTION__, __LINE__, fmt, ##__VA_ARGS__); \
-}
+#define LOG(fmt, ...) log_func(__FILENAME__, __FUNCTION__, __LINE__, fmt, ##__VA_ARGS__)
 
 /**
  * get name of errno error

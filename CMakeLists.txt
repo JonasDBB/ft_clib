@@ -13,7 +13,8 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
-add_library(ft_clib ft_clib.c)
+add_library(ft_clib)
+add_subdirectory(ft_clib)
 target_compile_options(ft_clib PUBLIC
 		-Wall
 		-Werror
@@ -27,12 +28,35 @@ target_link_options(ft_clib PUBLIC
 
 add_executable(
 		clib_test
-		clib_test.cpp
+		ft_clib/clib_test.cpp
 )
 target_link_libraries(
 		clib_test
 		GTest::gtest_main
 		ft_clib
+)
+
+add_library(ft_list)
+add_subdirectory(ft_list)
+target_compile_options(ft_list PUBLIC
+		-Wall
+		-Werror
+		-Wextra
+		-g3
+		-fsanitize=address
+		)
+target_link_options(ft_list PUBLIC
+		-fsanitize=address
+		)
+
+add_executable(
+		list_test
+		ft_list/list_test.cpp
+)
+target_link_libraries(
+		list_test
+		GTest::gtest_main
+		ft_list
 )
 
 include(GoogleTest)

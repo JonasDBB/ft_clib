@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "ft_list.h"
 
-node_t* new_node(DATA* data) {
+node_t* new_node(void* data) {
     node_t* ret = malloc(sizeof(node_t));
     if (!ret) {
         return NULL;
@@ -28,12 +28,12 @@ void remove_from_list(node_t* node) {
     node->prev = NULL;
 }
 
-void delete_node(node_t* node, void (*deleter)(DATA*)) {
+void delete_node(node_t* node, void (*deleter)(void*)) {
     if (!node) {
         errno = EINVAL;
         return;
     }
-    if (node->data) {
+    if (node->data && deleter) {
         deleter(node->data);
     }
     free(node);

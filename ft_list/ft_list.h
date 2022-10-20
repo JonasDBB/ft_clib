@@ -4,14 +4,12 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#define DATA void
-
 /***** ft_node.c *****/
 
 typedef struct node_s {
     struct node_s* next;
     struct node_s* prev;
-    DATA* data;
+    void* data;
 } node_t;
 
 /**
@@ -19,7 +17,7 @@ typedef struct node_s {
  * @param data data to be contained in node
  * @return newly allocated node
  */
-node_t* new_node(DATA* data);
+node_t* new_node(void* data);
 
 /**
  * safely remove the node from any list it might be in and relink the list
@@ -32,7 +30,7 @@ void remove_from_list(node_t* node);
  * @param node node to be deleted
  * @param deleter function to delete data type
  */
-void delete_node(node_t* node, void (* deleter)(DATA*));
+void delete_node(node_t* node, void (* deleter)(void*));
 
 /**
  * link a node behind another node
@@ -62,22 +60,22 @@ void node_swap(node_t* a, node_t* b);
 typedef struct list_s {
     node_t* sentinel;
     size_t size;
-    void (* node_deleter)(DATA*);
+    void (* node_deleter)(void*);
 } list_t;
 
 /**
  * allocates a new list
- * @param node_deteler function that deletes DATA type in node
+ * @param node_deteler function that deletes data in node
  * @return newly allocated list
  */
-list_t* new_list(void (* node_deteler)(DATA*));
+list_t* new_list(void (* node_deteler)(void*));
 
 /**
  * iterate on each DATA element in a list
  * @param list allocated list to be iterated on
- * @param func function to be applied on each DATA pointer of each node in the list
+ * @param func function to be applied on each data* of each node in the list
  */
-void list_for_each(list_t* list, void (* func)(DATA*));
+void list_for_each(list_t* list, void (* func)(void*));
 
 /**
  * delete every node from a list, but keep the list itsself

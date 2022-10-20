@@ -1,5 +1,6 @@
-#include "ft_list.h"
+#include <errno.h>
 #include <stdlib.h>
+#include "ft_list.h"
 
 node_t* new_node(DATA* data) {
     node_t* ret = malloc(sizeof(node_t));
@@ -14,6 +15,7 @@ node_t* new_node(DATA* data) {
 
 void remove_from_list(node_t* node) {
     if (!node) {
+        errno = EINVAL;
         return;
     }
     if (node->next) {
@@ -27,6 +29,10 @@ void remove_from_list(node_t* node) {
 }
 
 void delete_node(node_t* node, void (*deleter)(DATA*)) {
+    if (!node) {
+        errno = EINVAL;
+        return;
+    }
     if (node->data) {
         deleter(node->data);
     }
@@ -35,6 +41,7 @@ void delete_node(node_t* node, void (*deleter)(DATA*)) {
 
 bool insert_node_after(node_t* to_insert, node_t* dest) {
     if (!to_insert || !dest) {
+        errno = EINVAL;
         return false;
     }
     if (to_insert->next || to_insert->prev) {
@@ -51,6 +58,7 @@ bool insert_node_after(node_t* to_insert, node_t* dest) {
 
 bool insert_node_before(node_t* to_insert, node_t* dest) {
     if (!to_insert || !dest) {
+        errno = EINVAL;
         return false;
     }
     if (to_insert->next || to_insert->prev) {
@@ -65,15 +73,23 @@ bool insert_node_before(node_t* to_insert, node_t* dest) {
     return true;
 }
 
-bool node_swap(node_t* a, node_t* b) {
-    node_t* a_prev = a->prev;
-    node_t* b_prev = b->prev;
-    if (!a_prev || !b_prev) {
-        return false;
+void node_swap(node_t* a, node_t* b) {
+    if (!a || !b) {
+        errno = EINVAL;
+        return;
     }
+
+    node_t* a_prev = a->prev;
     remove_from_list(a);
+    // remove a before setting b_prev, so the case ... -> a -> b -> ... still works
+    node_t* b_prev = b->prev;
     remove_from_list(b);
-    insert_node_after(a, b_prev);
-    insert_node_after(b, a_prev);
-    return true;
+
+    if (b_prev) {
+        // a hast to be inserted first, for the case ... -> a -> b -> ...
+        insert_node_after(a, b_prev);
+    }
+    if (a_prev) {
+        insert_node_after(b, a_prev);
+    }
 }

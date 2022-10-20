@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <errno.h>
 #include "ft_list.h"
 
 list_t* new_list(void (* node_deleter)(DATA*)) {
@@ -14,6 +15,10 @@ list_t* new_list(void (* node_deleter)(DATA*)) {
 }
 
 void list_for_each(list_t* list, void (* func)(DATA*)) {
+    if (!list || !func) {
+        errno = EINVAL;
+        return;
+    }
     node_t* elem = list->sentinel->next;
     while (elem != list->sentinel) {
         node_t* tmp = elem->next;
@@ -23,6 +28,10 @@ void list_for_each(list_t* list, void (* func)(DATA*)) {
 }
 
 void list_clear(list_t* list) {
+    if (!list) {
+        errno = EINVAL;
+        return;
+    }
     node_t* elem = list->sentinel->next;
     while (elem != list->sentinel) {
         node_t* tmp = elem->next;
@@ -33,25 +42,38 @@ void list_clear(list_t* list) {
 }
 
 void list_delete(list_t* list) {
+    if (!list) {
+        errno = EINVAL;
+        return;
+    }
     list_clear(list);
     delete_node(list->sentinel, list->node_deleter);
     free(list);
 }
 
 void list_push_back(list_t* list, node_t* node) {
+    if (!list) {
+        errno = EINVAL;
+        return;
+    }
     if (insert_node_before(node, list->sentinel)) {
         ++list->size;
     }
 }
 
 void list_push_front(list_t* list, node_t* node) {
+    if (!list) {
+        errno = EINVAL;
+        return;
+    }
     if (insert_node_after(node, list->sentinel)) {
         ++list->size;
     }
 }
 
 node_t* list_pop_back(list_t* list) {
-    if (!list->size) {
+    if (!list || !list->size) {
+        errno = list ? ERANGE : EINVAL;
         return NULL;
     }
     node_t* elem = list->sentinel->prev;
@@ -61,7 +83,8 @@ node_t* list_pop_back(list_t* list) {
 }
 
 node_t* list_pop_front(list_t* list) {
-    if (!list->size) {
+    if (!list || !list->size) {
+        errno = list ? ERANGE : EINVAL;
         return NULL;
     }
     node_t* elem = list->sentinel->next;
@@ -71,7 +94,8 @@ node_t* list_pop_front(list_t* list) {
 }
 
 bool list_insert_at(list_t* list, node_t* node, size_t index) {
-    if (index > list->size) {
+    if (!list || index > list->size) {
+        errno = list ? ERANGE : EINVAL;
         return false;
     }
     node_t* elem = list->sentinel;
@@ -84,6 +108,7 @@ bool list_insert_at(list_t* list, node_t* node, size_t index) {
             ++list->size;
             return true;
         }
+        errno = EINVAL;
         return false;
     } else {
         while (index != list->size) {
@@ -94,12 +119,14 @@ bool list_insert_at(list_t* list, node_t* node, size_t index) {
             ++list->size;
             return true;
         }
+        errno = EINVAL;
         return false;
     }
 }
 
 node_t* list_at(list_t* list, size_t index) {
-    if (index >= list->size) {
+    if (!list || index >= list->size) {
+        errno = list ? ERANGE : EINVAL;
         return NULL;
     }
     node_t* elem = list->sentinel;
@@ -119,25 +146,39 @@ node_t* list_at(list_t* list, size_t index) {
 }
 
 node_t* list_begin(list_t* list) {
-    if (!list->size) {
+    if (!list || !list->size) {
+        errno = EINVAL;
         return NULL;
     }
     return list->sentinel->next;
 }
 
 node_t* list_end(list_t* list) {
-    if (!list->size) {
+    if (!list || !list->size) {
+        errno = EINVAL;
         return NULL;
     }
     return list->sentinel->prev;
 }
 
 void list_append(list_t* to_append, list_t* dst) {
-    node_t* elem = to_append->sentinel->next;
-    while (elem != to_append->sentinel) {
-        node_t* tmp = elem->next;
-        list_push_back(dst, elem);
-        elem = tmp;
+    if (!to_append || !dst) {
+        errno = EINVAL;
+        return;
     }
+    if (!to_append->size) {
+        list_delete(to_append);
+        return;
+    }
+
+    dst->sentinel->prev->next = to_append->sentinel->next;
+    to_append->sentinel->next->prev = dst->sentinel->prev;
+    to_append->sentinel->prev->next = dst->sentinel;
+    dst->sentinel->prev = to_append->sentinel->prev;
+    to_append->sentinel->next = to_append->sentinel->prev = to_append->sentinel;
+
+    dst->size += to_append->size;
+    to_append->size = 0;
+
     list_delete(to_append);
 }

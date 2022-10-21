@@ -2,7 +2,7 @@
 #include <errno.h>
 #include "ft_list.h"
 
-list_t* new_list(void (* node_deleter)(void*)) {
+list_t* list_new(void (* node_deleter)(void*)) {
     list_t* ret = malloc(sizeof(list_t));
     if (!ret) {
         return ret;

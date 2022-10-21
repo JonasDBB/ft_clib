@@ -65,10 +65,10 @@ typedef struct list_s {
 
 /**
  * allocates a new list
- * @param node_deteler function that deletes data in node
+ * @param node_deleter function that deletes data in node
  * @return newly allocated list
  */
-list_t* new_list(void (* node_deteler)(void*));
+list_t* list_new(void (* node_deleter)(void*));
 
 /**
  * iterate on each DATA element in a list

@@ -28,11 +28,12 @@ void remove_from_list(node_t* node) {
     node->prev = NULL;
 }
 
-void delete_node(node_t* node, void (*deleter)(void*)) {
+void delete_node(node_t* node, void (* deleter)(void*)) {
     if (!node) {
         errno = EINVAL;
         return;
     }
+    remove_from_list(node);
     if (node->data && deleter) {
         deleter(node->data);
     }
@@ -74,22 +75,36 @@ bool insert_node_before(node_t* to_insert, node_t* dest) {
 }
 
 void node_swap(node_t* a, node_t* b) {
-    if (!a || !b) {
+    if (!a || !b || a == b) {
         errno = EINVAL;
         return;
     }
+    bool reverse = a->prev == b;
+    if (reverse) {
+        node_t* b_prev = b->prev;
+        remove_from_list(b);
 
-    node_t* a_prev = a->prev;
-    remove_from_list(a);
-    // remove a before setting b_prev, so the case ... -> a -> b -> ... still works
-    node_t* b_prev = b->prev;
-    remove_from_list(b);
+        node_t* a_prev = a->prev;
+        remove_from_list(a);
 
-    if (b_prev) {
-        // a hast to be inserted first, for the case ... -> a -> b -> ...
-        insert_node_after(a, b_prev);
-    }
-    if (a_prev) {
-        insert_node_after(b, a_prev);
+        if (a_prev) {
+            insert_node_after(b, a_prev);
+        }
+        if (b_prev) {
+            insert_node_after(a, b_prev);
+        }
+    } else {
+        node_t* a_prev = a->prev;
+        remove_from_list(a);
+
+        node_t* b_prev = b->prev;
+        remove_from_list(b);
+
+        if (b_prev) {
+            insert_node_after(a, b_prev);
+        }
+        if (a_prev) {
+            insert_node_after(b, a_prev);
+        }
     }
 }

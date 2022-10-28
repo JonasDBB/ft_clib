@@ -131,6 +131,7 @@ node_t* list_at(list_t* list, size_t index) {
     }
     node_t* elem = list->sentinel;
     if (index < list->size / 2) {
+        ++index;
         while (index) {
             elem = elem->next;
             --index;

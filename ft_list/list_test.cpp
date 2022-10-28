@@ -128,35 +128,7 @@ TEST(node, InsertNodeAfter) {
     ASSERT_EQ(errno, EINVAL);
 }
 
-class ft_test_setup : public ::testing::Test {
-protected:
-    list_t* _list;
-    node_t* _node_x;
-    node_t* _node_y;
-    node_t* _node_z;
-
-    void SetUp() override {
-        errno = 0;
-        int x = 1;
-        int y = 2;
-        int z = 3;
-
-        _node_x = new_node(&x);
-        _node_y = new_node(&y);
-        _node_z = new_node(&z);
-        _list = list_new(nullptr);
-        list_push_back(_list, _node_x);
-        list_push_back(_list, _node_y);
-        list_push_back(_list, _node_z);
-    }
-
-    void TearDown() override {
-        errno = 0;
-        list_delete(_list);
-    }
-};
-
-TEST(list, SwapNode) {
+TEST(node, SwapNode) {
     list_t* list1 = list_new(nullptr);
     int x = 1;
     int y = 2;
@@ -219,6 +191,37 @@ TEST(list, SwapNode) {
     list_delete(list1);
     list_delete(list2);
 }
+
+class ft_test_setup : public ::testing::Test {
+public:
+    ft_test_setup() : _list(nullptr), _node_x(nullptr), _node_y(nullptr), _node_z(nullptr) {}
+
+protected:
+    list_t* _list;
+    node_t* _node_x;
+    node_t* _node_y;
+    node_t* _node_z;
+
+    void SetUp() override {
+        errno = 0;
+        int x = 1;
+        int y = 2;
+        int z = 3;
+
+        _node_x = new_node(&x);
+        _node_y = new_node(&y);
+        _node_z = new_node(&z);
+        _list = list_new(nullptr);
+        list_push_back(_list, _node_x);
+        list_push_back(_list, _node_y);
+        list_push_back(_list, _node_z);
+    }
+
+    void TearDown() override {
+        errno = 0;
+        list_delete(_list);
+    }
+};
 
 TEST(list, ListNew) {
     list_t* list = list_new(nullptr);
@@ -424,8 +427,115 @@ TEST(list, ListForEach) {
     list_delete(list);
 }
 
-// TODO: list insert at
-// TODO: list at
-// TODO: list begin
-// TODO: list end
-// TODO: list append
+TEST_F(ft_test_setup, ListInsertAt) {
+    int a = 5;
+    int b = 6;
+    int c = 7;
+    node_t* node_a = new_node(&a);
+    node_t* node_b = new_node(&b);
+    node_t* node_c = new_node(&c);
+
+    list_insert_at(_list, node_a, 42);
+    ASSERT_EQ(_list->size, 3);
+    ASSERT_EQ(errno, ERANGE);
+    ASSERT_EQ(node_a->prev, nullptr);
+    ASSERT_EQ(node_a->next, nullptr);
+    errno = 0;
+
+    list_insert_at(_list, node_a, 1);
+    ASSERT_EQ(_list->size, 4);
+    ASSERT_EQ(_node_x->next, node_a);
+    ASSERT_EQ(node_a->prev, _node_x);
+    ASSERT_EQ(_node_y->prev, node_a);
+    ASSERT_EQ(node_a->next, _node_y);
+
+    list_insert_at(_list, node_b, 4);
+    ASSERT_EQ(_list->size, 5);
+    ASSERT_EQ(_node_z->next, node_b);
+    ASSERT_EQ(node_b->prev, _node_z);
+    ASSERT_EQ(_list->sentinel->prev, node_b);
+    ASSERT_EQ(node_b->next, _list->sentinel);
+
+    list_insert_at(_list, node_c, 6);
+    ASSERT_EQ(_list->size, 5);
+    ASSERT_EQ(errno, ERANGE);
+    errno = 0;
+    delete_node(node_c, nullptr);
+
+    list_insert_at(nullptr, node_a, 1);
+    ASSERT_EQ(errno, EINVAL);
+    errno = 0;
+
+    list_insert_at(_list, nullptr, 1);
+    ASSERT_EQ(errno, EINVAL);
+    errno = 0;
+    list_insert_at(_list, node_a, -1);
+    ASSERT_EQ(errno, ERANGE);
+}
+
+TEST_F(ft_test_setup, ListAt) {
+    ASSERT_EQ(list_at(_list, 0), _node_x);
+    ASSERT_EQ(list_at(_list, 1), _node_y);
+    ASSERT_EQ(list_at(_list, 2), _node_z);
+
+    ASSERT_EQ(list_at(_list, -1), nullptr);
+    ASSERT_EQ(errno, ERANGE);
+    errno = 0;
+
+    ASSERT_EQ(list_at(_list, 8), nullptr);
+    ASSERT_EQ(errno, ERANGE);
+    errno = 0;
+
+    ASSERT_EQ(list_at(nullptr, 1), nullptr);
+    ASSERT_EQ(errno, EINVAL);
+}
+
+TEST_F(ft_test_setup, ListBegin) {
+    ASSERT_EQ(list_begin(_list), _node_x);
+
+    list_t* empty_list = list_new(nullptr);
+    ASSERT_EQ(list_begin(empty_list), nullptr);
+    ASSERT_EQ(errno, EINVAL);
+    errno = 0;
+    list_delete(empty_list);
+
+    ASSERT_EQ(list_begin(nullptr), nullptr);
+    ASSERT_EQ(errno, EINVAL);
+}
+
+TEST_F(ft_test_setup, ListEnd) {
+    ASSERT_EQ(list_end(_list), _node_z);
+
+    list_t* empty_list = list_new(nullptr);
+    ASSERT_EQ(list_end(empty_list), nullptr);
+    ASSERT_EQ(errno, EINVAL);
+    errno = 0;
+    list_delete(empty_list);
+
+    ASSERT_EQ(list_end(nullptr), nullptr);
+    ASSERT_EQ(errno, EINVAL);
+}
+
+TEST_F(ft_test_setup, ListAppend) {
+    list_t* new_list = list_new(nullptr);
+    int nrs[10] = {11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
+    for (int& nr: nrs) {
+        node_t* node = new_node(&nr);
+        list_push_back(new_list, node);
+    }
+
+    ASSERT_EQ(_list->size, 3);
+    ASSERT_EQ(new_list->size, 10);
+    list_append(new_list, _list);
+    ASSERT_EQ(_list->size, 13);
+    ASSERT_EQ(_list->sentinel->next, _node_x);
+    ASSERT_EQ(*(int*)_list->sentinel->prev->data, 20);
+    ASSERT_EQ(*(int*)_node_z->next->data, 11);
+    // new_list should already be deallocated, if not it will leak
+
+    list_append(nullptr, _list);
+    ASSERT_EQ(errno, EINVAL);
+    errno = 0;
+    list_append(_list, nullptr);
+    ASSERT_EQ(errno, EINVAL);
+}

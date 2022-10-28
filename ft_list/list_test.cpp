@@ -93,9 +93,31 @@ TEST(node, InsertNodeBefore) {
     ASSERT_EQ(node_x->prev, nullptr);
     ASSERT_EQ(node_y->prev, node_x);
     ASSERT_EQ(node_z->prev, node_y);
+
+    int i = 4;
+    node_t* node_i = new_node(&i);
+    insert_node_before(node_x, node_i);
+    ASSERT_EQ(node_i->prev, node_x);
+    ASSERT_EQ(node_y->prev, nullptr);
+    ASSERT_EQ(node_x->prev, nullptr);
+    ASSERT_EQ(node_x->next, node_i);
+    insert_node_before(node_z, node_i);
+    ASSERT_EQ(node_i->prev, node_z);
+    ASSERT_EQ(node_y->next, nullptr);
+    ASSERT_EQ(node_z->prev, node_x);
+    ASSERT_EQ(node_z->next, node_i);
+
+    errno = 0;
+    insert_node_before(node_x, nullptr);
+    ASSERT_EQ(errno, EINVAL);
+    errno = 0;
+    insert_node_before(nullptr, node_x);
+    ASSERT_EQ(errno, EINVAL);
+
     delete_node(node_x, nullptr);
     delete_node(node_y, nullptr);
     delete_node(node_z, nullptr);
+    delete_node(node_i, nullptr);
 
     errno = 0;
     insert_node_before(nullptr, nullptr);
@@ -119,9 +141,31 @@ TEST(node, InsertNodeAfter) {
     ASSERT_EQ(node_x->prev, nullptr);
     ASSERT_EQ(node_y->prev, node_x);
     ASSERT_EQ(node_z->prev, node_y);
+
+    int i = 4;
+    node_t* node_i = new_node(&i);
+    insert_node_after(node_x, node_i);
+    ASSERT_EQ(node_i->next, node_x);
+    ASSERT_EQ(node_y->prev, nullptr);
+    ASSERT_EQ(node_x->next, nullptr);
+    ASSERT_EQ(node_x->prev, node_i);
+    insert_node_after(node_z, node_i);
+    ASSERT_EQ(node_i->next, node_z);
+    ASSERT_EQ(node_y->next, nullptr);
+    ASSERT_EQ(node_z->next, node_x);
+    ASSERT_EQ(node_z->prev, node_i);
+
+    errno = 0;
+    insert_node_after(node_x, nullptr);
+    ASSERT_EQ(errno, EINVAL);
+    errno = 0;
+    insert_node_after(nullptr, node_x);
+    ASSERT_EQ(errno, EINVAL);
+
     delete_node(node_x, nullptr);
     delete_node(node_y, nullptr);
     delete_node(node_z, nullptr);
+    delete_node(node_i, nullptr);
 
     errno = 0;
     insert_node_after(nullptr, nullptr);
@@ -133,24 +177,25 @@ TEST(node, SwapNode) {
     int x = 1;
     int y = 2;
     int z = 3;
-    node_t* node_x = new_node(&x);
-    node_t* node_y = new_node(&y);
-    node_t* node_z = new_node(&z);
-    list_push_back(list1, node_x);
-    list_push_back(list1, node_y);
-    list_push_back(list1, node_z);
+    node_t* node_1 = new_node(&x);
+    node_t* node_2 = new_node(&y);
+    node_t* node_3 = new_node(&z);
+    list_push_back(list1, node_1);
+    list_push_back(list1, node_2);
+    list_push_back(list1, node_3);
 
     list_t* list2 = list_new(nullptr);
     int a = 4;
     int b = 5;
     int c = 6;
-    node_t* node_a = new_node(&a);
-    node_t* node_b = new_node(&b);
-    node_t* node_c = new_node(&c);
-    list_push_back(list2, node_a);
-    list_push_back(list2, node_b);
-    list_push_back(list2, node_c);
+    node_t* node_4 = new_node(&a);
+    node_t* node_5 = new_node(&b);
+    node_t* node_6 = new_node(&c);
+    list_push_back(list2, node_4);
+    list_push_back(list2, node_5);
+    list_push_back(list2, node_6);
 
+    // 1 - 2 - 3 | 4 - 5 - 6
     ASSERT_EQ(*(int*)(list1->sentinel->next->data), 1);
     ASSERT_EQ(*(int*)(list1->sentinel->next->next->data), 2);
     ASSERT_EQ(*(int*)(list1->sentinel->next->next->next->data), 3);
@@ -158,35 +203,64 @@ TEST(node, SwapNode) {
     ASSERT_EQ(*(int*)(list2->sentinel->next->next->data), 5);
     ASSERT_EQ(*(int*)(list2->sentinel->next->next->next->data), 6);
 
-    node_swap(node_y, node_b);
+    node_swap(node_2, node_5);
 
+    // 1 - 5 - 3 | 4 - 2 - 6
     ASSERT_EQ(*(int*)(list1->sentinel->next->data), 1);
     ASSERT_EQ(*(int*)(list1->sentinel->next->next->data), 5);
     ASSERT_EQ(*(int*)(list1->sentinel->next->next->next->data), 3);
     ASSERT_EQ(*(int*)(list2->sentinel->next->data), 4);
     ASSERT_EQ(*(int*)(list2->sentinel->next->next->data), 2);
     ASSERT_EQ(*(int*)(list2->sentinel->next->next->next->data), 6);
-    // 1 -> 5 -> 3, swap 1 and 5
-    node_swap(list1->sentinel->next, list1->sentinel->next->next);
+    // swap 1 and 5, where a->next == b
+    node_swap(node_1, node_5);
+    // 5 - 1 - 3 | 4 - 2 - 6
     ASSERT_EQ(*(int*)(list1->sentinel->next->data), 5);
     ASSERT_EQ(*(int*)(list1->sentinel->next->next->data), 1);
     ASSERT_EQ(*(int*)(list1->sentinel->next->next->next->data), 3);
 
-    // 5 -> 1 -> 3, swap 1 and 5
-    node_swap(list1->sentinel->next->next, list1->sentinel->next);
+    // swap 1 and 5, where a->prev == b
+    node_swap(node_1, node_5);
+    // 1 - 5 - 3 | 4 - 2 - 6
     ASSERT_EQ(*(int*)(list1->sentinel->next->data), 1);
     ASSERT_EQ(*(int*)(list1->sentinel->next->next->data), 5);
     ASSERT_EQ(*(int*)(list1->sentinel->next->next->next->data), 3);
 
+    node_t* node_x = new_node(&x);
+    node_t* node_y = new_node(&y);
+//    node_t* node_z = new_node(&z);
+
+    node_swap(node_x, node_y);
+    ASSERT_EQ(node_x->next, nullptr);
+    ASSERT_EQ(node_x->prev, nullptr);
+    ASSERT_EQ(node_y->next, nullptr);
+    ASSERT_EQ(node_y->prev, nullptr);
+
+    insert_node_after(node_y, node_x);
+    ASSERT_EQ(node_x->next, node_y);
+    ASSERT_EQ(node_x->prev, nullptr);
+    ASSERT_EQ(node_y->next, nullptr);
+    ASSERT_EQ(node_y->prev, node_x);
+
+    node_swap(node_y, node_x);
+    ASSERT_EQ(node_x->next, nullptr);
+    ASSERT_EQ(node_x->prev, node_y);
+    ASSERT_EQ(node_y->next, node_x);
+    ASSERT_EQ(node_y->prev, nullptr);
+
     errno = 0;
-    node_swap(node_x, node_x);
+    node_swap(node_1, node_1);
     ASSERT_EQ(errno, EINVAL);
     errno = 0;
-    node_swap(nullptr, node_x);
+    node_swap(nullptr, node_1);
     ASSERT_EQ(errno, EINVAL);
     errno = 0;
-    node_swap(node_x, nullptr);
+    node_swap(node_1, nullptr);
     ASSERT_EQ(errno, EINVAL);
+
+    delete_node(node_x, nullptr);
+    delete_node(node_y, nullptr);
+//    delete_node(node_z, nullptr);
 
     list_delete(list1);
     list_delete(list2);

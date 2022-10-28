@@ -83,16 +83,12 @@ void node_swap(node_t* a, node_t* b) {
     if (reverse) {
         node_t* b_prev = b->prev;
         remove_from_list(b);
-
-        node_t* a_prev = a->prev;
         remove_from_list(a);
 
-        if (a_prev) {
-            insert_node_after(b, a_prev);
-        }
         if (b_prev) {
             insert_node_after(a, b_prev);
         }
+        insert_node_after(b, a);
     } else {
         node_t* a_prev = a->prev;
         remove_from_list(a);

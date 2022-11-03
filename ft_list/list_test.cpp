@@ -534,17 +534,30 @@ TEST_F(ft_test_setup, ListInsertAt) {
     ASSERT_EQ(_list->size, 5);
     ASSERT_EQ(errno, ERANGE);
     errno = 0;
-    delete_node(node_c, nullptr);
+
+    list_insert_at(_list, node_c, 0);
+    ASSERT_EQ(_list->size, 6);
+    ASSERT_EQ(_list->sentinel->next, node_c);
+    ASSERT_EQ(node_c->prev, _list->sentinel);
+    ASSERT_EQ(_node_x->prev, node_c);
+    ASSERT_EQ(node_c->next, _node_x);
 
     list_insert_at(nullptr, node_a, 1);
     ASSERT_EQ(errno, EINVAL);
     errno = 0;
-
     list_insert_at(_list, nullptr, 1);
+    ASSERT_EQ(errno, EINVAL);
+    errno = 0;
+    list_insert_at(_list, nullptr, 5);
     ASSERT_EQ(errno, EINVAL);
     errno = 0;
     list_insert_at(_list, node_a, -1);
     ASSERT_EQ(errno, ERANGE);
+
+    list_clear(_list);
+    ASSERT_EQ(_list->size, 0);
+    node_t* node = new_node(&a);
+    list_insert_at(_list, node, 0);
 }
 
 TEST_F(ft_test_setup, ListAt) {
@@ -591,6 +604,7 @@ TEST_F(ft_test_setup, ListEnd) {
 }
 
 TEST_F(ft_test_setup, ListAppend) {
+    list_t* empty_list = list_new(nullptr);
     list_t* new_list = list_new(nullptr);
     int nrs[10] = {11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
     for (int& nr: nrs) {
@@ -599,6 +613,11 @@ TEST_F(ft_test_setup, ListAppend) {
     }
 
     ASSERT_EQ(_list->size, 3);
+    ASSERT_EQ(empty_list->size, 0);
+    list_append(empty_list, _list);
+    ASSERT_EQ(_list->size, 3);
+    // empty_list should be deallocated, if not it will leak
+
     ASSERT_EQ(new_list->size, 10);
     list_append(new_list, _list);
     ASSERT_EQ(_list->size, 13);

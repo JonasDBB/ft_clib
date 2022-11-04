@@ -196,35 +196,35 @@ TEST(node, SwapNode) {
     list_push_back(list2, node_6);
 
     // 1 - 2 - 3 | 4 - 5 - 6
-    ASSERT_EQ(*(int*)(list1->sentinel->next->data), 1);
-    ASSERT_EQ(*(int*)(list1->sentinel->next->next->data), 2);
-    ASSERT_EQ(*(int*)(list1->sentinel->next->next->next->data), 3);
-    ASSERT_EQ(*(int*)(list2->sentinel->next->data), 4);
-    ASSERT_EQ(*(int*)(list2->sentinel->next->next->data), 5);
-    ASSERT_EQ(*(int*)(list2->sentinel->next->next->next->data), 6);
+    ASSERT_EQ(*(int*)(list1->sentinel.next->data), 1);
+    ASSERT_EQ(*(int*)(list1->sentinel.next->next->data), 2);
+    ASSERT_EQ(*(int*)(list1->sentinel.next->next->next->data), 3);
+    ASSERT_EQ(*(int*)(list2->sentinel.next->data), 4);
+    ASSERT_EQ(*(int*)(list2->sentinel.next->next->data), 5);
+    ASSERT_EQ(*(int*)(list2->sentinel.next->next->next->data), 6);
 
     node_swap(node_2, node_5);
 
     // 1 - 5 - 3 | 4 - 2 - 6
-    ASSERT_EQ(*(int*)(list1->sentinel->next->data), 1);
-    ASSERT_EQ(*(int*)(list1->sentinel->next->next->data), 5);
-    ASSERT_EQ(*(int*)(list1->sentinel->next->next->next->data), 3);
-    ASSERT_EQ(*(int*)(list2->sentinel->next->data), 4);
-    ASSERT_EQ(*(int*)(list2->sentinel->next->next->data), 2);
-    ASSERT_EQ(*(int*)(list2->sentinel->next->next->next->data), 6);
+    ASSERT_EQ(*(int*)(list1->sentinel.next->data), 1);
+    ASSERT_EQ(*(int*)(list1->sentinel.next->next->data), 5);
+    ASSERT_EQ(*(int*)(list1->sentinel.next->next->next->data), 3);
+    ASSERT_EQ(*(int*)(list2->sentinel.next->data), 4);
+    ASSERT_EQ(*(int*)(list2->sentinel.next->next->data), 2);
+    ASSERT_EQ(*(int*)(list2->sentinel.next->next->next->data), 6);
     // swap 1 and 5, where a->next == b
     node_swap(node_1, node_5);
     // 5 - 1 - 3 | 4 - 2 - 6
-    ASSERT_EQ(*(int*)(list1->sentinel->next->data), 5);
-    ASSERT_EQ(*(int*)(list1->sentinel->next->next->data), 1);
-    ASSERT_EQ(*(int*)(list1->sentinel->next->next->next->data), 3);
+    ASSERT_EQ(*(int*)(list1->sentinel.next->data), 5);
+    ASSERT_EQ(*(int*)(list1->sentinel.next->next->data), 1);
+    ASSERT_EQ(*(int*)(list1->sentinel.next->next->next->data), 3);
 
     // swap 1 and 5, where a->prev == b
     node_swap(node_1, node_5);
     // 1 - 5 - 3 | 4 - 2 - 6
-    ASSERT_EQ(*(int*)(list1->sentinel->next->data), 1);
-    ASSERT_EQ(*(int*)(list1->sentinel->next->next->data), 5);
-    ASSERT_EQ(*(int*)(list1->sentinel->next->next->next->data), 3);
+    ASSERT_EQ(*(int*)(list1->sentinel.next->data), 1);
+    ASSERT_EQ(*(int*)(list1->sentinel.next->next->data), 5);
+    ASSERT_EQ(*(int*)(list1->sentinel.next->next->next->data), 3);
 
     node_t* node_x = new_node(&x);
     node_t* node_y = new_node(&y);
@@ -301,7 +301,7 @@ TEST(list, ListNew) {
     list_t* list = list_new(nullptr);
 
     ASSERT_EQ(list->size, 0);
-    ASSERT_NE(list->sentinel, nullptr);
+    ASSERT_NE(&list->sentinel, nullptr);
     list_delete(list);
 }
 
@@ -349,14 +349,14 @@ TEST(list, ListPushBack) {
     list_push_back(list, node_y);
     list_push_back(list, node_z);
     ASSERT_EQ(list->size, 3);
-    ASSERT_EQ(list->sentinel->next->next, node_y);
-    ASSERT_EQ(list->sentinel->next->next->next, node_z);
-    ASSERT_EQ(list->sentinel->next->next->next->next, list->sentinel);
-    ASSERT_EQ(list->sentinel->prev, node_z);
-    ASSERT_EQ(list->sentinel->prev->prev, node_y);
-    ASSERT_EQ(list->sentinel->prev->prev->prev, node_x);
-    ASSERT_EQ(list->sentinel->prev->prev->prev->prev, list->sentinel);
-    ASSERT_EQ(list->sentinel->next, node_x);
+    ASSERT_EQ(list->sentinel.next->next, node_y);
+    ASSERT_EQ(list->sentinel.next->next->next, node_z);
+    ASSERT_EQ(list->sentinel.next->next->next->next, &list->sentinel);
+    ASSERT_EQ(list->sentinel.prev, node_z);
+    ASSERT_EQ(list->sentinel.prev->prev, node_y);
+    ASSERT_EQ(list->sentinel.prev->prev->prev, node_x);
+    ASSERT_EQ(list->sentinel.prev->prev->prev->prev, &list->sentinel);
+    ASSERT_EQ(list->sentinel.next, node_x);
 
     errno = 0;
     list_push_back(nullptr, node_x);
@@ -382,14 +382,14 @@ TEST(list, ListPushFront) {
     list_push_front(list, node_y);
     list_push_front(list, node_x);
     ASSERT_EQ(list->size, 3);
-    ASSERT_EQ(list->sentinel->next, node_x);
-    ASSERT_EQ(list->sentinel->next->next, node_y);
-    ASSERT_EQ(list->sentinel->next->next->next, node_z);
-    ASSERT_EQ(list->sentinel->next->next->next->next, list->sentinel);
-    ASSERT_EQ(list->sentinel->prev, node_z);
-    ASSERT_EQ(list->sentinel->prev->prev, node_y);
-    ASSERT_EQ(list->sentinel->prev->prev->prev, node_x);
-    ASSERT_EQ(list->sentinel->prev->prev->prev->prev, list->sentinel);
+    ASSERT_EQ(list->sentinel.next, node_x);
+    ASSERT_EQ(list->sentinel.next->next, node_y);
+    ASSERT_EQ(list->sentinel.next->next->next, node_z);
+    ASSERT_EQ(list->sentinel.next->next->next->next, &list->sentinel);
+    ASSERT_EQ(list->sentinel.prev, node_z);
+    ASSERT_EQ(list->sentinel.prev->prev, node_y);
+    ASSERT_EQ(list->sentinel.prev->prev->prev, node_x);
+    ASSERT_EQ(list->sentinel.prev->prev->prev->prev, &list->sentinel);
 
     errno = 0;
     list_push_front(nullptr, node_x);
@@ -461,10 +461,10 @@ TEST_F(ft_test_setup, ListClear) {
     ASSERT_EQ(_list->size, 3);
     list_clear(_list);
     ASSERT_EQ(_list->size, 0);
-    ASSERT_NE(_list->sentinel, nullptr);
+    ASSERT_NE(&_list->sentinel, nullptr);
     list_clear(_list);
     ASSERT_EQ(_list->size, 0);
-    ASSERT_NE(_list->sentinel, nullptr);
+    ASSERT_NE(&_list->sentinel, nullptr);
 
     list_clear(nullptr);
     ASSERT_EQ(errno, EINVAL);
@@ -488,9 +488,9 @@ TEST(list, ListForEach) {
     list_push_back(list, node_z);
 
     list_for_each(list, multiply_nr);
-    ASSERT_EQ(*(int*)(list->sentinel->next->data), 2);
-    ASSERT_EQ(*(int*)(list->sentinel->next->next->data), 3);
-    ASSERT_EQ(*(int*)(list->sentinel->next->next->next->data), 4);
+    ASSERT_EQ(*(int*)(list->sentinel.next->data), 2);
+    ASSERT_EQ(*(int*)(list->sentinel.next->next->data), 3);
+    ASSERT_EQ(*(int*)(list->sentinel.next->next->next->data), 4);
 
     list_for_each(nullptr, multiply_nr);
     ASSERT_EQ(errno, EINVAL);
@@ -527,8 +527,8 @@ TEST_F(ft_test_setup, ListInsertAt) {
     ASSERT_EQ(_list->size, 5);
     ASSERT_EQ(_node_z->next, node_b);
     ASSERT_EQ(node_b->prev, _node_z);
-    ASSERT_EQ(_list->sentinel->prev, node_b);
-    ASSERT_EQ(node_b->next, _list->sentinel);
+    ASSERT_EQ(_list->sentinel.prev, node_b);
+    ASSERT_EQ(node_b->next, &_list->sentinel);
 
     list_insert_at(_list, node_c, 6);
     ASSERT_EQ(_list->size, 5);
@@ -537,8 +537,8 @@ TEST_F(ft_test_setup, ListInsertAt) {
 
     list_insert_at(_list, node_c, 0);
     ASSERT_EQ(_list->size, 6);
-    ASSERT_EQ(_list->sentinel->next, node_c);
-    ASSERT_EQ(node_c->prev, _list->sentinel);
+    ASSERT_EQ(_list->sentinel.next, node_c);
+    ASSERT_EQ(node_c->prev, &_list->sentinel);
     ASSERT_EQ(_node_x->prev, node_c);
     ASSERT_EQ(node_c->next, _node_x);
 
@@ -621,8 +621,8 @@ TEST_F(ft_test_setup, ListAppend) {
     ASSERT_EQ(new_list->size, 10);
     list_append(new_list, _list);
     ASSERT_EQ(_list->size, 13);
-    ASSERT_EQ(_list->sentinel->next, _node_x);
-    ASSERT_EQ(*(int*)_list->sentinel->prev->data, 20);
+    ASSERT_EQ(_list->sentinel.next, _node_x);
+    ASSERT_EQ(*(int*)_list->sentinel.prev->data, 20);
     ASSERT_EQ(*(int*)_node_z->next->data, 11);
     // new_list should already be deallocated, if not it will leak
 

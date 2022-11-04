@@ -21,7 +21,7 @@ target_compile_options(ft_clib PUBLIC
 		-Wextra
 		-g3
 		-fsanitize=address
-		--coverage
+#		--coverage
 		)
 target_link_options(ft_clib PUBLIC
 		-fsanitize=address
@@ -46,7 +46,7 @@ target_compile_options(ft_list PUBLIC
 		-Wextra
 		-g3
 		-fsanitize=address
-		--coverage
+#		--coverage
 		)
 target_link_options(ft_list PUBLIC
 		-fsanitize=address

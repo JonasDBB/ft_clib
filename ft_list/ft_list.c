@@ -7,8 +7,7 @@ list_t* list_new(void (* node_deleter)(void*)) {
     if (!ret) {
         return ret;
     }
-    ret->sentinel = new_node(NULL);
-    ret->sentinel->next = ret->sentinel->prev = ret->sentinel;
+    ret->sentinel.next = ret->sentinel.prev = &ret->sentinel;
     ret->size = 0;
     ret->node_deleter = node_deleter;
     return ret;
@@ -19,8 +18,8 @@ void list_for_each(list_t* list, void (* func)(void*)) {
         errno = EINVAL;
         return;
     }
-    node_t* elem = list->sentinel->next;
-    while (elem != list->sentinel) {
+    node_t* elem = list->sentinel.next;
+    while (elem != &list->sentinel) {
         node_t* tmp = elem->next;
         func(elem->data);
         elem = tmp;
@@ -32,8 +31,8 @@ void list_clear(list_t* list) {
         errno = EINVAL;
         return;
     }
-    node_t* elem = list->sentinel->next;
-    while (elem != list->sentinel) {
+    node_t* elem = list->sentinel.next;
+    while (elem != &list->sentinel) {
         node_t* tmp = elem->next;
         delete_node(elem, list->node_deleter);
         elem = tmp;
@@ -47,7 +46,6 @@ void list_delete(list_t* list) {
         return;
     }
     list_clear(list);
-    delete_node(list->sentinel, list->node_deleter);
     free(list);
 }
 
@@ -56,7 +54,7 @@ void list_push_back(list_t* list, node_t* node) {
         errno = EINVAL;
         return;
     }
-    if (insert_node_before(node, list->sentinel)) {
+    if (insert_node_before(node, &list->sentinel)) {
         ++list->size;
     }
 }
@@ -66,7 +64,7 @@ void list_push_front(list_t* list, node_t* node) {
         errno = EINVAL;
         return;
     }
-    if (insert_node_after(node, list->sentinel)) {
+    if (insert_node_after(node, &list->sentinel)) {
         ++list->size;
     }
 }
@@ -76,7 +74,7 @@ node_t* list_pop_back(list_t* list) {
         errno = list ? ERANGE : EINVAL;
         return NULL;
     }
-    node_t* elem = list->sentinel->prev;
+    node_t* elem = list->sentinel.prev;
     remove_from_list(elem);
     --list->size;
     return elem;
@@ -87,7 +85,7 @@ node_t* list_pop_front(list_t* list) {
         errno = list ? ERANGE : EINVAL;
         return NULL;
     }
-    node_t* elem = list->sentinel->next;
+    node_t* elem = list->sentinel.next;
     remove_from_list(elem);
     --list->size;
     return elem;
@@ -98,7 +96,7 @@ bool list_insert_at(list_t* list, node_t* node, size_t index) {
         errno = list ? ERANGE : EINVAL;
         return false;
     }
-    node_t* elem = list->sentinel;
+    node_t* elem = &list->sentinel;
     if (!list->size || index < list->size / 2) {
         while (index) {
             elem = elem->next;
@@ -129,7 +127,7 @@ node_t* list_at(list_t* list, size_t index) {
         errno = list ? ERANGE : EINVAL;
         return NULL;
     }
-    node_t* elem = list->sentinel;
+    node_t* elem = &list->sentinel;
     if (index < list->size / 2) {
         ++index;
         while (index) {
@@ -151,7 +149,7 @@ node_t* list_begin(list_t* list) {
         errno = EINVAL;
         return NULL;
     }
-    return list->sentinel->next;
+    return list->sentinel.next;
 }
 
 node_t* list_end(list_t* list) {
@@ -159,7 +157,7 @@ node_t* list_end(list_t* list) {
         errno = EINVAL;
         return NULL;
     }
-    return list->sentinel->prev;
+    return list->sentinel.prev;
 }
 
 void list_append(list_t* to_append, list_t* dst) {
@@ -172,11 +170,11 @@ void list_append(list_t* to_append, list_t* dst) {
         return;
     }
 
-    dst->sentinel->prev->next = to_append->sentinel->next;
-    to_append->sentinel->next->prev = dst->sentinel->prev;
-    to_append->sentinel->prev->next = dst->sentinel;
-    dst->sentinel->prev = to_append->sentinel->prev;
-    to_append->sentinel->next = to_append->sentinel->prev = to_append->sentinel;
+    dst->sentinel.prev->next = to_append->sentinel.next;
+    to_append->sentinel.next->prev = dst->sentinel.prev;
+    to_append->sentinel.prev->next = &dst->sentinel;
+    dst->sentinel.prev = to_append->sentinel.prev;
+    to_append->sentinel.next = to_append->sentinel.prev = &to_append->sentinel;
 
     dst->size += to_append->size;
     to_append->size = 0;

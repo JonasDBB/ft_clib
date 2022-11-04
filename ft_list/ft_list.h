@@ -58,7 +58,7 @@ void node_swap(node_t* a, node_t* b);
 /***** ft_list.c *****/
 
 typedef struct list_s {
-    node_t* sentinel;
+    node_t sentinel;
     size_t size;
     void (* node_deleter)(void*);
 } list_t;

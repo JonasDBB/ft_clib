@@ -15,6 +15,7 @@ enable_testing()
 
 add_library(ft_clib)
 add_subdirectory(ft_clib)
+target_include_directories(ft_clib PUBLIC ft_clib)
 target_compile_options(ft_clib PUBLIC
 		-Wall
 		-Werror
@@ -40,6 +41,7 @@ target_link_libraries(
 
 add_library(ft_list)
 add_subdirectory(ft_list)
+target_include_directories(ft_list PUBLIC ft_list)
 target_compile_options(ft_list PUBLIC
 		-Wall
 		-Werror

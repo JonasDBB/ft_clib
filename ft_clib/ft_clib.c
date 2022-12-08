@@ -146,6 +146,14 @@ void ft_bzero(void* s, size_t n) {
     ft_memset(s, 0, n);
 }
 
+void ft_memcpy(void* dst, const void* src, size_t n) {
+    char* d = dst;
+    char* s = (char*)src;
+    for (size_t i = 0; i < n; ++i) {
+        d[i] = s[i];
+    }
+}
+
 char* ft_strchr(const char *s, int c) {
     for (; *s && *s != c; ++s);
     return *s == c ? (char*)s : NULL;

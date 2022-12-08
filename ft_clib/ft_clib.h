@@ -65,6 +65,14 @@ void* ft_memset(void* b, int c, size_t len);
 void ft_bzero(void* s, size_t n);
 
 /**
+ * copy n bytes from src to dst; undefined if src and dst overlap
+ * @param dst pointer to destination
+ * @param src pointer to source
+ * @param n total bytes to be copied
+ */
+void ft_memcpy(void* dst, const void* src, size_t n);
+
+/**
  * find first occurrence of c in s
  * @param s source string
  * @param c character to find

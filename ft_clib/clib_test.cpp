@@ -93,6 +93,25 @@ TEST(clib, bzero) {
     ASSERT_EQ(arr[20], 'a');
 }
 
+TEST(clib, memcpy) {
+    char arr[1024];
+
+    ft_bzero(arr, 1024);
+    ft_memset(arr, 'j', 20);
+
+    ft_memcpy(arr + 100, arr, 5);
+    ASSERT_EQ(arr[99], 0);
+    ASSERT_EQ(arr[100], 'j');
+    ASSERT_EQ(arr[104], 'j');
+    ASSERT_EQ(arr[105], 0);
+
+    ft_memcpy(arr + 200, arr + 99, 10);
+    ASSERT_EQ(arr[200], 0);
+    ASSERT_EQ(arr[201], 'j');
+    ASSERT_EQ(arr[205], 'j');
+    ASSERT_EQ(arr[206], 0);
+}
+
 TEST(clib, strstr) {
     char s[6] = "hello";
     ASSERT_EQ(ft_strchr(s, 'l'), s + 2);

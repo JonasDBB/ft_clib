@@ -6,6 +6,7 @@
 #include <errno.h>
 #include <stdbool.h>
 #include <limits.h>
+#include <unistd.h>
 
 static const char* const errnames[] = {
     [0] = 0,
@@ -259,6 +260,21 @@ long ft_strtol(const char* str, char** endptr, int base) {
         *endptr = (char*)str;
     }
     return ret == LONG_MIN ? ret : sign * ret;
+}
+
+static char x_digit(int c) {
+    if (c < 10) {
+        return (char)(c + '0');
+    }
+    return (char)('A' + c - 10);
+}
+
+void ft_write_nr_base(int fd, unsigned long n, unsigned int base) {
+    if (n >= base) {
+        ft_write_nr_base(fd, n / base, base);
+    }
+    char c = x_digit((int)(n % base));
+    write(fd, &c, 1);
 }
 
 void log_func(const char* file, const char* func, int line, const char* fmt, ...) {

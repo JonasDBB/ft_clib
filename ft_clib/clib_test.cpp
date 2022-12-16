@@ -284,3 +284,5 @@ TEST(clib, strtol) {
     ft_strtol(s.c_str(), &endptr, 10);
     ASSERT_EQ(endptr, s.c_str());
 }
+
+// TODO: write test for ft_write_nr_base

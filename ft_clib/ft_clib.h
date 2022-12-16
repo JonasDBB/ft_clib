@@ -126,4 +126,12 @@ bool ft_isspace(char c);
  */
 long ft_strtol(const char *str, char **endptr, int base);
 
+/**
+ * writes a number using only write calls up to base 36 and using capital letters for bases > 10
+ * @param fd fd to write to
+ * @param n number to write
+ * @param base base to write the number in
+ */
+void ft_write_nr_base(int fd, unsigned long n, unsigned int base);
+
 #endif

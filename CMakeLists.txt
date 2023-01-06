@@ -21,11 +21,11 @@ target_compile_options(ft_clib PUBLIC
 		-Werror
 		-Wextra
 		-g3
-		-fsanitize=address
+#		-fsanitize=address
 #		--coverage
 		)
 target_link_options(ft_clib PUBLIC
-		-fsanitize=address
+#		-fsanitize=address
 )
 
 add_executable(
@@ -36,7 +36,7 @@ target_link_libraries(
 		clib_test
 		GTest::gtest_main
 		ft_clib
-		gcov
+#		gcov
 )
 
 add_library(ft_list)
@@ -47,11 +47,11 @@ target_compile_options(ft_list PUBLIC
 		-Werror
 		-Wextra
 		-g3
-		-fsanitize=address
+#		-fsanitize=address
 #		--coverage
 		)
 target_link_options(ft_list PUBLIC
-		-fsanitize=address
+#		-fsanitize=address
 		)
 
 add_executable(
@@ -62,7 +62,7 @@ target_link_libraries(
 		list_test
 		GTest::gtest_main
 		ft_list
-		gcov
+#		gcov
 )
 
 include(GoogleTest)

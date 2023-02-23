@@ -16,23 +16,37 @@
 #define MEMSET_TYPE long long
 #define MEMSET_TYPE_SIZE sizeof(MEMSET_TYPE)
 
+typedef enum e_log_level {
+    LOG_DEBUG = 0,
+    LOG_WARN = 1,
+    LOG_ERROR = 2
+} log_level;
+
+#ifndef LOG_LEVEL
+#define LOG_LEVEL LOG_DEBUG
+#endif
+
 #define MAX_LOG_SIZE 1024
 #define __FILENAME__ (ft_strrchr(__FILE__, '/') ? ft_strrchr(__FILE__, '/') + 1 : __FILE__)
 
 /**
  * log function to use for clear information and easy debugging
  * use "LOG(...)" to use where ... are printf arguments
+ * and where LOG, WARN and ERROR are different log levels with different colors
  * example
  * "LOG("my %s here %d", "log message", 5);"
  * to get an informative log line with message "my log message here 5"
+ * @param lvl log level
  * @param file filename
  * @param func function name
  * @param line line number
  * @param fmt print fmt
  * @param ... variadic arguments
  */
-void log_func(const char* file, const char* func, int line, const char* fmt, ...);
-#define LOG(fmt, ...) log_func(__FILENAME__, __FUNCTION__, __LINE__, fmt, ##__VA_ARGS__)
+void log_func(log_level lvl, const char* file, const char* func, int line, const char* fmt, ...);
+#define LOG(fmt, ...) log_func(LOG_DEBUG, __FILENAME__, __FUNCTION__, __LINE__, fmt, ##__VA_ARGS__)
+#define WARN(fmt, ...) log_func(LOG_WARN, __FILENAME__, __FUNCTION__, __LINE__, fmt, ##__VA_ARGS__)
+#define ERROR(fmt, ...) log_func(LOG_ERROR, __FILENAME__, __FUNCTION__, __LINE__, fmt, ##__VA_ARGS__)
 
 /**
  * get name of errno error
@@ -78,7 +92,7 @@ void ft_memcpy(void* dst, const void* src, size_t n);
  * @param c character to find
  * @return location of first found occurrence or NULL if not found
  */
-char* ft_strchr(const char *s, int c);
+char* ft_strchr(const char* s, int c);
 
 /**
  * find last occurrence of c in s
@@ -86,7 +100,7 @@ char* ft_strchr(const char *s, int c);
  * @param c character to find
  * @return location of last found occurrence or NULL if not found
  */
-char* ft_strrchr(const char *s, int c);
+char* ft_strrchr(const char* s, int c);
 
 /**
  * check if c is a numerical character
@@ -124,7 +138,7 @@ bool ft_isspace(char c);
  * base 0 will identify base 10 (no special start), 8 (start with 0) or base 16 (start with 0x)
  * @return converted value or LONG_MAX / LONG_MIN in case of over- / underflow
  */
-long ft_strtol(const char *str, char **endptr, int base);
+long ft_strtol(const char* str, char** endptr, int base);
 
 /**
  * writes a number using only write calls up to base 36 and using capital letters for bases > 10

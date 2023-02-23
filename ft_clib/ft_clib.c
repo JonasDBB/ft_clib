@@ -9,9 +9,9 @@
 #include <unistd.h>
 
 static const char* const errnames[] = {
-    [0] = 0,
+        [0] = 0,
 #ifdef EPERM
-    [EPERM] = "EPERM",
+        [EPERM] = "EPERM",
 #endif
 #ifdef ENOENT
         [ENOENT] = "ENOENT",
@@ -155,12 +155,12 @@ void ft_memcpy(void* dst, const void* src, size_t n) {
     }
 }
 
-char* ft_strchr(const char *s, int c) {
+char* ft_strchr(const char* s, int c) {
     for (; *s && *s != c; ++s);
     return *s == c ? (char*)s : NULL;
 }
 
-char* ft_strrchr(const char *s, int c) {
+char* ft_strrchr(const char* s, int c) {
     char* t = (char*)s;
     for (; *t; ++t);
     for (; t != s && *t != c; --t);
@@ -196,7 +196,7 @@ static int char_base_val(char c) {
 static bool is_in_base(char c, int base) {
     const char symbols[] = "0123456789abcdefghijklmnopqrstuvwxyz";
     for (int i = 0; i < base; ++i) {
-        if (c == symbols [i]) {
+        if (c == symbols[i]) {
             return true;
         }
     }
@@ -277,7 +277,16 @@ void ft_write_nr_base(int fd, unsigned long n, unsigned int base) {
     write(fd, &c, 1);
 }
 
-void log_func(const char* file, const char* func, int line, const char* fmt, ...) {
+static const char* const log_colors[] = {
+        [LOG_DEBUG] = CLR_GRN"DBG",
+        [LOG_WARN] = CLR_YLW"WRN",
+        [LOG_ERROR] = CLR_RED"ERR"
+};
+
+void log_func(log_level lvl, const char* file, const char* func, int line, const char* fmt, ...) {
+    if (lvl < LOG_LEVEL) {
+        return;
+    }
     char buf[MAX_LOG_SIZE];
     va_list varlist;
     va_start(varlist, fmt);
@@ -286,8 +295,8 @@ void log_func(const char* file, const char* func, int line, const char* fmt, ...
 
     struct timeval t;
     gettimeofday(&t, NULL);
-    struct tm *tm = localtime(&t.tv_sec);
+    struct tm* tm = localtime(&t.tv_sec);
 
-    fprintf(stderr, "%02d:%02d:%02d.%03d| %s:%d: %s(): [%s]\n",
-            tm->tm_hour, tm->tm_min, tm->tm_sec, (int)(t.tv_usec / 1000), file, line, func, buf);
+    fprintf(stderr, "%s %02d:%02d:%02d.%03d| %s:%d: %s(): [%s]\n" CLR_RESET,
+            log_colors[lvl], tm->tm_hour, tm->tm_min, tm->tm_sec, (int)(t.tv_usec / 1000), file, line, func, buf);
 }

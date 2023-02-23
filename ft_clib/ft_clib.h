@@ -30,6 +30,12 @@ typedef enum e_log_level {
 #define __FILENAME__ (ft_strrchr(__FILE__, '/') ? ft_strrchr(__FILE__, '/') + 1 : __FILE__)
 
 /**
+ * change the log level (default is LOG_DEBUG
+ * @param lvl log level to change to
+ */
+void set_log_level(log_level lvl);
+
+/**
  * log function to use for clear information and easy debugging
  * use "LOG(...)" to use where ... are printf arguments
  * and where LOG, WARN and ERROR are different log levels with different colors

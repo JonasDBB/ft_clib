@@ -283,8 +283,14 @@ static const char* const log_colors[] = {
         [LOG_ERROR] = CLR_RED"ERR"
 };
 
+log_level current_log_level = LOG_DEBUG;
+
+void set_log_level(log_level lvl) {
+    current_log_level = lvl;
+}
+
 void log_func(log_level lvl, const char* file, const char* func, int line, const char* fmt, ...) {
-    if (lvl < LOG_LEVEL) {
+    if (lvl < current_log_level) {
         return;
     }
     char buf[MAX_LOG_SIZE];

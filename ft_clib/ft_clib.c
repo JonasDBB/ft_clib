@@ -210,7 +210,7 @@ long ft_strtol(const char* str, char** endptr, int base) {
     }
     long ret = 0;
     long sign = 1;
-    while (str && ft_isspace(*str)) {
+    while (ft_isspace(*str)) {
         ++str;
     }
     if (*str == '+') {
@@ -221,8 +221,8 @@ long ft_strtol(const char* str, char** endptr, int base) {
         ++str;
     }
     if (base == 0) {
-        if (*str && *str == '0') {
-            if (str + 1 && *(str + 1) == 'x') {
+        if (*str == '0') {
+            if (*(str + 1) == 'x') {
                 base = 16;
             } else {
                 base = 8;
@@ -231,7 +231,7 @@ long ft_strtol(const char* str, char** endptr, int base) {
             base = 10;
         }
     }
-    if (base == 16 && *str && *str == '0' && str + 1 && *(str + 1) == 'x') {
+    if (base == 16 && *str == '0' && *(str + 1) == 'x') {
         str += 2;
     }
     if (!is_in_base(ft_tolower(*str), base)) {

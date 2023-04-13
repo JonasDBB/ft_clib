@@ -138,7 +138,7 @@ bool ft_isspace(char c);
 
 /**
  * convert a string to long value
- * @param str source string
+ * @param str null terminated source string
  * @param endptr if not NULL, will store pointer to first invalid character in str
  * @param base base of the given string, up to 36 (0-9 followed by a-z)
  * base 0 will identify base 10 (no special start), 8 (start with 0) or base 16 (start with 0x)

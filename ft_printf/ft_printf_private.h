@@ -19,7 +19,7 @@ typedef struct buffer_s {
     bool error;
 } buffer_t;
 
-typedef struct flags {
+typedef struct flags_s {
     bool alternate; // '#'
     bool zero;  // '0'
     bool minus; // '-'
@@ -31,7 +31,7 @@ typedef struct flags {
 } flags_t;
 
 // d, i signed / o, u, x, X unsigned
-typedef struct length_mod {
+typedef struct length_mod_s {
     bool hh; // char / unsigned char
     bool h;  // short / unsigned short
     bool l;  // long / unsigned long
@@ -41,7 +41,7 @@ typedef struct length_mod {
     bool z;  // ssize_t / size_t
 } length_mod_t;
 
-typedef enum tyep_specifier {
+typedef enum type_specifier_e {
     DIGIT = 'd',
     DIGIT_ = 'i',
     OCTAL = 'o',
@@ -52,7 +52,7 @@ typedef enum tyep_specifier {
     STRING = 's',
     POINTER = 'p', // same as %#x
     PERCENT = '%'
-} type;
+} conversion_type;
 
 void flush_buffer_fd(buffer_t* buff);
 void flush_buffer_str(buffer_t* buff);

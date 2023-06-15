@@ -1,21 +1,14 @@
 #include <unistd.h>
-#include <stdarg.h>
 #include <stdio.h>
 #include <limits.h>
+#include <pthread.h>
 #include "ft_clib.h"
 #include "ft_printf_private.h"
 
-void print_loop(buffer_t* buffer, const char* restrict format, va_list ap) {
-    char* fmt = (char*)format;
-    while (*fmt && buffer->error == false) {
-        if (*fmt != '%') {
-            add_to_buffer(buffer, *(fmt++));
-            continue;
-        }
-    }
-}
+pthread_mutex_t g_lock = PTHREAD_MUTEX_INITIALIZER;
 
 int ft_vprintf(const char* restrict format, va_list ap) {
+    pthread_mutex_lock(&g_lock);
     buffer_t buffer;
     ft_bzero(&buffer, sizeof(buffer));
 
@@ -24,10 +17,12 @@ int ft_vprintf(const char* restrict format, va_list ap) {
 
     print_loop(&buffer, format, ap);
 
+    pthread_mutex_unlock(&g_lock);
     return buffer.error ? -1 : buffer.ret;
 }
 
 int ft_vfprintf(FILE* restrict stream, const char* restrict format, va_list ap) {
+    pthread_mutex_lock(&g_lock);
     buffer_t buffer;
     ft_bzero(&buffer, sizeof(buffer));
 
@@ -36,10 +31,12 @@ int ft_vfprintf(FILE* restrict stream, const char* restrict format, va_list ap) 
 
     print_loop(&buffer, format, ap);
 
+    pthread_mutex_unlock(&g_lock);
     return buffer.error ? -1 : buffer.ret;
 }
 
 int ft_vsprintf(char* restrict str, const char* restrict format, va_list ap) {
+    pthread_mutex_lock(&g_lock);
     buffer_t buffer;
     ft_bzero(&buffer, sizeof(buffer));
 
@@ -49,10 +46,12 @@ int ft_vsprintf(char* restrict str, const char* restrict format, va_list ap) {
 
     print_loop(&buffer, format, ap);
 
+    pthread_mutex_unlock(&g_lock);
     return buffer.error ? -1 : buffer.ret;
 }
 
 int ft_vsnprintf(char* restrict str, size_t size, const char* restrict format, va_list ap) {
+    pthread_mutex_lock(&g_lock);
     buffer_t buffer;
     ft_bzero(&buffer, sizeof(buffer));
 
@@ -65,12 +64,14 @@ int ft_vsnprintf(char* restrict str, size_t size, const char* restrict format, v
         buffer.str[buffer.str_index] = '\0';
     }
 
+    pthread_mutex_unlock(&g_lock);
     return buffer.error ? -1 : buffer.ret;
 }
 
 // int vasprintf(char** ret, const char*format, va_list ap);
 
 int ft_vdprintf(int fd, const char* restrict format, va_list ap) {
+    pthread_mutex_lock(&g_lock);
     buffer_t buffer;
     ft_bzero(&buffer, sizeof(buffer));
 
@@ -79,6 +80,7 @@ int ft_vdprintf(int fd, const char* restrict format, va_list ap) {
 
     print_loop(&buffer, format, ap);
 
+    pthread_mutex_unlock(&g_lock);
     return buffer.error ? -1 : buffer.ret;
 }
 

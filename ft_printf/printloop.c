@@ -1,13 +1,15 @@
+#include <stdio.h>
 #include "ft_clib.h"
 #include "ft_printf_private.h"
 
-static flags_t gather_flags(buffer_t* buffer, const char* restrict format, va_list ap) {
-    flags_t ret;
-    ft_bzero(&ret, sizeof(flags_t));
-
-
-
-    return ret;
+void dbg_print_flags(flags_t flags) {
+    fprintf(stderr, "alternate: %s\n", flags.alternate ? "true" : "false");
+    fprintf(stderr, "zero: %s\n", flags.alternate ? "true" : "false");
+    fprintf(stderr, "minus: %s\n", flags.alternate ? "true" : "false");
+    fprintf(stderr, "space: %s\n", flags.alternate ? "true" : "false");
+    fprintf(stderr, "plus: %s\n", flags.alternate ? "true" : "false");
+    fprintf(stderr, "field_width: %lu\n", flags.field_width);
+    fprintf(stderr, "precision: %lu\n", flags.precision);
 }
 
 void print_loop(buffer_t* buffer, const char* restrict format, va_list ap) {

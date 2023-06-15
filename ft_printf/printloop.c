@@ -1,7 +1,7 @@
 #include "ft_clib.h"
 #include "ft_printf_private.h"
 
-static flags_t gather_flags(buffer_t* buffer, const char* restrict format) {
+static flags_t gather_flags(buffer_t* buffer, const char* restrict format, va_list ap) {
     flags_t ret;
     ft_bzero(&ret, sizeof(flags_t));
 
@@ -16,6 +16,7 @@ void print_loop(buffer_t* buffer, const char* restrict format, va_list ap) {
             add_to_buffer(buffer, *(format++));
             continue;
         }
-        flags_t flags = gather_flags(buffer, format);
+        flags_t flags = gather_flags(buffer, format, ap);
     }
+    flush(buffer);
 }

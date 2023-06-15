@@ -7,15 +7,21 @@
 
 #define PRINT_BUFFER_SIZE 1024
 
-typedef struct buffer_s {
-    char buffer[PRINT_BUFFER_SIZE];
-    int ret;
-    int fd;
+typedef struct string_data_s {
     char* str;
     size_t str_index;
-    size_t size;
     size_t max_size;
-    void (* flusher)(struct buffer_s*);
+} string_data_t;
+
+typedef struct buffer_s {
+    char buffer[PRINT_BUFFER_SIZE];
+    size_t buffer_size;
+    bool is_string;
+    union {
+      int fd;
+      string_data_t str_data;
+    };
+    int ret;
     bool error;
 } buffer_t;
 
@@ -54,8 +60,7 @@ typedef enum type_specifier_e {
     PERCENT = '%'
 } conversion_type;
 
-void flush_buffer_fd(buffer_t* buff);
-void flush_buffer_str(buffer_t* buff);
+void flush(buffer_t* buff);
 void add_to_buffer(buffer_t* buff, char c);
 void print_loop(buffer_t* buffer, const char* restrict format, va_list ap);
 

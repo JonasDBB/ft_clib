@@ -13,7 +13,6 @@ int ft_vprintf(const char* restrict format, va_list ap) {
     ft_bzero(&buffer, sizeof(buffer));
 
     buffer.fd = STDOUT_FILENO;
-    buffer.flusher = flush_buffer_fd;
 
     print_loop(&buffer, format, ap);
 
@@ -27,7 +26,6 @@ int ft_vfprintf(FILE* restrict stream, const char* restrict format, va_list ap) 
     ft_bzero(&buffer, sizeof(buffer));
 
     buffer.fd = fileno(stream);
-    buffer.flusher = flush_buffer_fd;
 
     print_loop(&buffer, format, ap);
 
@@ -40,9 +38,9 @@ int ft_vsprintf(char* restrict str, const char* restrict format, va_list ap) {
     buffer_t buffer;
     ft_bzero(&buffer, sizeof(buffer));
 
-    buffer.str = str;
-    buffer.max_size = (size_t)INT_MAX + 1;
-    buffer.flusher = flush_buffer_str;
+    buffer.is_string = true;
+    buffer.str_data.str = str;
+    buffer.str_data.max_size = (size_t)INT_MAX + 1;
 
     print_loop(&buffer, format, ap);
 
@@ -55,13 +53,13 @@ int ft_vsnprintf(char* restrict str, size_t size, const char* restrict format, v
     buffer_t buffer;
     ft_bzero(&buffer, sizeof(buffer));
 
-    buffer.str = str;
-    buffer.max_size = size == 0 ? 0 : size - 1;
-    buffer.flusher = flush_buffer_str;
+    buffer.is_string = true;
+    buffer.str_data.str = str;
+    buffer.str_data.max_size = size == 0 ? 0 : size - 1;
 
     print_loop(&buffer, format, ap);
     if (size != 0) {
-        buffer.str[buffer.str_index] = '\0';
+        buffer.str_data.str[buffer.str_data.str_index] = '\0';
     }
 
     pthread_mutex_unlock(&g_lock);
@@ -76,7 +74,6 @@ int ft_vdprintf(int fd, const char* restrict format, va_list ap) {
     ft_bzero(&buffer, sizeof(buffer));
 
     buffer.fd = fd;
-    buffer.flusher = flush_buffer_fd;
 
     print_loop(&buffer, format, ap);
 

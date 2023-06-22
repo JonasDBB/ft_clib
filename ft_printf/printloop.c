@@ -29,16 +29,33 @@ static void dbg_print_flags(flags_t flags) {
     fprintf(stderr, "length mod: %s\n", l_name[flags.length_mod]);
 }
 
+static const print_func f_map[] = {
+        [DIGIT] = digit,
+        [DIGIT_] = digit,
+        [OCTAL] = octal,
+        [UNSIGNED] = unsigned_int,
+        [HEX] = hex,
+        [HEX_UPPER] = hex_upper,
+        [CHAR] = character,
+        [STRING] = string,
+        [POINTER] = pointer,
+        [PERCENT] = percent
+};
+
 void print_loop(buffer_t* buffer, const char* restrict* format, va_list ap) {
     const char* restrict fmt = *format;
     while (*fmt && buffer->error == false) {
         if (*fmt != '%') {
-            add_to_buffer(buffer, *(fmt++));
+            add_to_buffer(buffer, *fmt++);
             continue;
         }
         ++fmt;
         flags_t flags = gather_flags(buffer, &fmt, ap);
         dbg_print_flags(flags);
+        if (buffer->error == true) {
+            return;
+        }
+        f_map[(size_t)*fmt++](buffer, flags, ap);
     }
     flush(buffer);
 }

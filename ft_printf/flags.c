@@ -35,17 +35,18 @@ static void set_mod_flag(flags_t* flags, char c) {
     }
 }
 
-static void set_mod_flags(buffer_t* buffer, const char* restrict* format, flags_t* flags) {
+static bool set_mod_flags(const char* restrict* format, flags_t* flags) {
     while (*format && is_mod_flag(**format)) {
         set_mod_flag(flags, **format);
         ++(*format);
     }
     if (*format == 0) {
-        buffer->error = true;
+        return true;
     }
-};
+    return false;
+}
 
-static void set_width(buffer_t* buffer, const char* restrict* format, va_list ap, flags_t* flags) {
+static bool set_width(const char* restrict* format, va_list ap, flags_t* flags) {
     if (**format == '*') {
         int width_arg = va_arg(ap, int);
         if (width_arg < 0) {
@@ -60,13 +61,14 @@ static void set_width(buffer_t* buffer, const char* restrict* format, va_list ap
         *format = inc;
     }
     if (*format == 0) {
-        buffer->error = true;
+        return true;
     }
+    return false;
 }
 
-static void set_precision(buffer_t* buffer, const char* restrict* format, va_list ap, flags_t* flags) {
+static bool set_precision(const char* restrict* format, va_list ap, flags_t* flags) {
     if (**format != '.') {
-        return;
+        return false;
     }
     ++(*format);
     if (**format == '*') {
@@ -81,11 +83,12 @@ static void set_precision(buffer_t* buffer, const char* restrict* format, va_lis
         *format = inc;
     }
     if (*format == 0) {
-        buffer->error = true;
+        return true;
     }
+    return false;
 }
 
-static void set_length_mod(buffer_t* buffer, const char* restrict* format, flags_t* flags) {
+static bool set_length_mod(const char* restrict* format, flags_t* flags) {
     switch (**format) {
         case 'l': {
             flags->length_mod = L;
@@ -118,20 +121,21 @@ static void set_length_mod(buffer_t* buffer, const char* restrict* format, flags
             ++(*format);
             break;
         case '\0':
-            buffer->error = true;
+            return true;
         default:
             break;
     }
+    return false;
 }
 
 flags_t gather_flags(buffer_t* buffer, const char* restrict* format, va_list ap) {
     flags_t ret;
     ft_bzero(&ret, sizeof(flags_t));
 
-    set_mod_flags(buffer, format, &ret);
-    set_width(buffer, format, ap, &ret);
-    set_precision(buffer, format, ap, &ret);
-    set_length_mod(buffer, format, &ret);
+    buffer->error = set_mod_flags(format, &ret);
+    buffer->error = set_width(format, ap, &ret);
+    buffer->error = set_precision(format, ap, &ret);
+    buffer->error = set_length_mod(format, &ret);
 
     return ret;
 }

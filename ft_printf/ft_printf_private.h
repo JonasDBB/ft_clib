@@ -6,6 +6,7 @@
 #include <stdarg.h>
 
 #define PRINT_BUFFER_SIZE 1024
+#define UNUSED (void)
 
 typedef struct string_data_s {
     char* str;
@@ -53,9 +54,9 @@ typedef enum type_specifier_e {
     DIGIT = 'd',
     DIGIT_ = 'i',
     OCTAL = 'o',
-    UNSINGED = 'u',
+    UNSIGNED = 'u',
     HEX = 'x',
-    HEX_CAP = 'X',
+    HEX_UPPER = 'X',
     CHAR = 'c',
     STRING = 's',
     POINTER = 'p', // same as %#x
@@ -66,5 +67,17 @@ void flush(buffer_t* buff);
 void add_to_buffer(buffer_t* buff, char c);
 void print_loop(buffer_t* buffer, const char* restrict* format, va_list ap);
 flags_t gather_flags(buffer_t* buffer, const char* restrict* format, va_list ap);
+
+typedef void (*print_func)(buffer_t* buffer, flags_t flags, va_list ap);
+
+void digit(buffer_t* buffer, flags_t flags, va_list ap);
+void octal(buffer_t* buffer, flags_t flags, va_list ap);
+void unsigned_int(buffer_t* buffer, flags_t flags, va_list ap);
+void hex(buffer_t* buffer, flags_t flags, va_list ap);
+void hex_upper(buffer_t* buffer, flags_t flags, va_list ap);
+void character(buffer_t* buffer, flags_t flags, va_list ap);
+void string(buffer_t* buffer, flags_t flags, va_list ap);
+void pointer(buffer_t* buffer, flags_t flags, va_list ap);
+void percent(buffer_t* buffer, flags_t flags, va_list ap);
 
 #endif

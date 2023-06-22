@@ -3,4 +3,5 @@ target_sources(ft_printf PRIVATE
 		buffer.c
 		printloop.c
 		flags.c
+		print_functions.c
 		)

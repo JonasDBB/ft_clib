@@ -29,6 +29,8 @@ static void dbg_print_flags(flags_t flags) {
     fprintf(stderr, "length mod: %s\n", l_name[flags.length_mod]);
 }
 
+static const char* conversion_chars = "diouxXcsp%";
+
 static const print_func f_map[] = {
         [DIGIT] = digit,
         [DIGIT_] = digit,
@@ -55,7 +57,12 @@ void print_loop(buffer_t* buffer, const char* restrict* format, va_list ap) {
         if (buffer->error == true) {
             return;
         }
-        f_map[(size_t)*fmt++](buffer, flags, ap);
+        char conversion_type_char = *fmt++;
+        if (ft_strchr(conversion_chars, conversion_type_char) == NULL) {
+            buffer->error = true;
+            return;
+        }
+        f_map[(size_t)conversion_type_char](buffer, flags, ap);
     }
     flush(buffer);
 }

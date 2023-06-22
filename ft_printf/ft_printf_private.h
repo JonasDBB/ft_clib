@@ -64,7 +64,7 @@ typedef enum type_specifier_e {
 
 void flush(buffer_t* buff);
 void add_to_buffer(buffer_t* buff, char c);
-void print_loop(buffer_t* buffer, const char* restrict format, va_list ap);
-flags_t gather_flags(buffer_t* buffer, const char* restrict format, va_list ap);
+void print_loop(buffer_t* buffer, const char* restrict* format, va_list ap);
+flags_t gather_flags(buffer_t* buffer, const char* restrict* format, va_list ap);
 
 #endif

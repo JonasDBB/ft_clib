@@ -35,86 +35,87 @@ static void set_mod_flag(flags_t* flags, char c) {
     }
 }
 
-static void set_mod_flags(buffer_t* buffer, const char* restrict format, flags_t* flags) {
-    while (*format && is_mod_flag(*format)) {
-        set_mod_flag(flags, *format);
-        ++format;
+static void set_mod_flags(buffer_t* buffer, const char* restrict* format, flags_t* flags) {
+    while (*format && is_mod_flag(**format)) {
+        set_mod_flag(flags, **format);
+        ++(*format);
     }
     if (*format == 0) {
         buffer->error = true;
     }
 };
 
-static void set_width(buffer_t* buffer, const char* restrict format, va_list ap, flags_t* flags) {
-    if (*format == '*') {
+static void set_width(buffer_t* buffer, const char* restrict* format, va_list ap, flags_t* flags) {
+    if (**format == '*') {
         int width_arg = va_arg(ap, int);
         if (width_arg < 0) {
             flags->minus = true;
-            flags->field_width = -width_arg;
+            width_arg = -width_arg;
         }
-        ++format;
-    } else if (ft_isnum(*format)) {
+        flags->field_width = width_arg;
+        ++(*format);
+    } else if (ft_isnum(**format)) {
         char* inc;
-        flags->field_width = ft_strtol(format, &inc, 10);
-        format = inc;
+        flags->field_width = ft_strtol(*format, &inc, 10);
+        *format = inc;
     }
     if (*format == 0) {
         buffer->error = true;
     }
 }
 
-static void set_precision(buffer_t* buffer, const char* restrict format, va_list ap, flags_t* flags) {
-    if (*format != '.') {
+static void set_precision(buffer_t* buffer, const char* restrict* format, va_list ap, flags_t* flags) {
+    if (**format != '.') {
         return;
     }
-    ++format;
-    if (*format == '*') {
+    ++(*format);
+    if (**format == '*') {
         int precision_arg = va_arg(ap, int);
         if (precision_arg > 0) {
             flags->precision = precision_arg;
         }
-        ++format;
-    } else if (ft_isnum(*format)) {
+        ++(*format);
+    } else if (ft_isnum(**format)) {
         char* inc;
-        flags->precision = ft_strtol(format, &inc, 10);
-        format = inc;
+        flags->precision = ft_strtol(*format, &inc, 10);
+        *format = inc;
     }
     if (*format == 0) {
         buffer->error = true;
     }
 }
 
-static void set_length_mod(buffer_t* buffer, const char* restrict format, flags_t* flags) {
-    switch (*format) {
+static void set_length_mod(buffer_t* buffer, const char* restrict* format, flags_t* flags) {
+    switch (**format) {
         case 'l': {
             flags->length_mod = L;
-            ++format;
-            if (*format == 'l') {
+            ++(*format);
+            if (**format == 'l') {
                 flags->length_mod = LL;
-                ++format;
+                ++(*format);
             }
             break;
         }
         case 'h': {
             flags->length_mod = H;
-            ++format;
-            if (*format == 'h') {
+            ++(*format);
+            if (**format == 'h') {
                 flags->length_mod = HH;
-                ++format;
+                ++(*format);
             }
             break;
         }
         case 'j':
             flags->length_mod = J;
-            ++format;
+            ++(*format);
             break;
         case 't':
             flags->length_mod = T;
-            ++format;
+            ++(*format);
             break;
         case 'z':
             flags->length_mod = Z;
-            ++format;
+            ++(*format);
             break;
         case '\0':
             buffer->error = true;
@@ -123,7 +124,7 @@ static void set_length_mod(buffer_t* buffer, const char* restrict format, flags_
     }
 }
 
-flags_t gather_flags(buffer_t* buffer, const char* restrict format, va_list ap) {
+flags_t gather_flags(buffer_t* buffer, const char* restrict* format, va_list ap) {
     flags_t ret;
     ft_bzero(&ret, sizeof(flags_t));
 

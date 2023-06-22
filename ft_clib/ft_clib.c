@@ -164,6 +164,44 @@ char* ft_strrchr(const char* s, int c) {
     return *t == c ? t : NULL;
 }
 
+#define s1_char *(char*)(s1 + i)
+#define s2_char *(char*)(s2 + i)
+
+int ft_memcmp(const void* s1, const void* s2, size_t n) {
+    for (size_t i = 0; i < n; ++i) {
+        if (s1_char != s2_char) {
+            return s1_char - s2_char;
+        }
+    }
+    return 0;
+}
+
+int ft_strcmp(const char* s1, const char* s2) {
+    size_t i = 0;
+    for (; s1_char && s2_char; ++i) {
+        if (s1_char != s2_char) {
+            return s1_char - s2_char;
+        }
+    }
+    if (s1_char != s2_char) {
+        return s1_char - s2_char;
+    }
+    return 0;
+}
+
+int ft_strncmp(const char* s1, const char* s2, size_t n) {
+    size_t i = 0;
+    for (; i < n && s1_char && s2_char; ++i) {
+        if (s1_char != s2_char) {
+            return s1_char - s2_char;
+        }
+    }
+    if (s1_char != s2_char) {
+        return s1_char - s2_char;
+    }
+    return 0;
+}
+
 bool ft_isnum(char c) {
     return c >= '0' && c <= '9';
 }
@@ -190,10 +228,11 @@ static int char_base_val(char c) {
     return 0;
 }
 
+static const char base_chars[] = "0123456789abcdefghijklmnopqrstuvwxyz";
+
 static bool is_in_base(char c, int base) {
-    const char symbols[] = "0123456789abcdefghijklmnopqrstuvwxyz";
     for (int i = 0; i < base; ++i) {
-        if (c == symbols[i]) {
+        if (c == base_chars[i]) {
             return true;
         }
     }
@@ -272,4 +311,38 @@ void ft_write_nr_base(int fd, unsigned long n, unsigned int base) {
     }
     char c = x_digit((int)(n % base));
     write(fd, &c, 1);
+}
+
+#define MAX_LL_DIGITS 19
+
+char* ft_lltoa_base(long long i, char* buffer, int base) {
+    if ((base != 0 && (base < 2 || base > 36)) || !buffer) {
+        errno = EINVAL;
+        return NULL;
+    }
+    if (i == LONG_LONG_MIN) {
+        ft_memcpy(buffer, "-9223372036854775808", 20);
+        buffer[20] = '\0';
+        return buffer;
+    }
+
+    char buf[MAX_LL_DIGITS + 2];
+    ft_bzero(buf, MAX_LL_DIGITS + 2);
+    char *p = buf + MAX_LL_DIGITS + 1;
+    bool is_negative = false;
+    if (i < 0) {
+        is_negative = true;
+        i = -i;
+    }
+
+    do {
+        *--p = (char)(i < 10 ? i + '0' : i - 10 + 'a');
+        i /= base;
+    } while (i != 0);
+
+    if (is_negative) {
+        *--p = '-';
+    }
+    ft_memcpy(buffer, p, buf + MAX_LL_DIGITS + 1 - p);
+    return buffer;
 }

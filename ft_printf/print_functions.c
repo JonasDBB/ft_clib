@@ -1,3 +1,4 @@
+#include "ft_clib.h"
 #include "ft_printf_private.h"
 
 void digit(buffer_t* buffer, flags_t flags, va_list ap) {

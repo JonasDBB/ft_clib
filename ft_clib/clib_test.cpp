@@ -112,18 +112,30 @@ TEST(clib, memcpy) {
     ASSERT_EQ(arr[206], 0);
 }
 
-TEST(clib, strstr) {
+TEST(clib, strchr) {
     char s[6] = "hello";
     ASSERT_EQ(ft_strchr(s, 'l'), s + 2);
     ASSERT_EQ(ft_strchr(s, 'k'), nullptr);
     ASSERT_EQ(ft_strchr(s, 0), s + 5);
 }
 
-TEST(clib, strrstr) {
+TEST(clib, strrchr) {
     char s[6] = "hello";
     ASSERT_EQ(ft_strrchr(s, 'l'), s + 3);
     ASSERT_EQ(ft_strrchr(s, 'k'), nullptr);
     ASSERT_EQ(ft_strrchr(s, 0), s + 5);
+}
+
+TEST(clib, memcmp) {
+
+}
+
+TEST(clib, strcmp) {
+
+}
+
+TEST(clib, strncmp) {
+
 }
 
 TEST(clib, isnum) {
@@ -286,3 +298,8 @@ TEST(clib, strtol) {
 }
 
 // TODO: write test for ft_write_nr_base
+
+TEST(clib, itoa_base) {
+    char buf[21];
+
+}

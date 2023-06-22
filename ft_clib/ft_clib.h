@@ -4,6 +4,8 @@
 #include <stddef.h>
 #include <stdbool.h>
 
+#define UNUSED (void)
+
 // colors
 #define CLR_RED "\x1b[31m"
 #define CLR_GRN "\x1b[32m"
@@ -105,6 +107,32 @@ char* ft_strchr(const char* s, int c);
 char* ft_strrchr(const char* s, int c);
 
 /**
+ * compare memory in 2 segments
+ * @param s1 first segment to compare
+ * @param s2 second segment to compare
+ * @param n number of bytes to compare
+ * @return 0 if s1 and s2 are equal, otherwise the difference between the first differing bytes is returned
+ */
+int ft_memcmp(const void* s1, const void* s2, size_t n);
+
+/**
+ * compare 2 strings
+ * @param s1 first string to compare
+ * @param s2 second string to compare
+ * @return 0 if s1 and s2 are equal, otherwise the difference between the first differing characters is returned
+ */
+int ft_strcmp(const char* s1, const char* s2);
+
+/**
+ * compare 2 strings
+ * @param s1 first string to compare
+ * @param s2 second string to compare
+ * @param n number of characters to compare
+ * @return 0 if s1 and s2 are equal, otherwise the difference between the first differing characters is returned
+ */
+int ft_strncmp(const char* s1, const char* s2, size_t n);
+
+/**
  * check if c is a numerical character
  * @param c character to check
  * @return true if c is a numerical character, false otherwise
@@ -149,5 +177,14 @@ long ft_strtol(const char* str, char** endptr, int base);
  * @param base base to write the number in
  */
 void ft_write_nr_base(int fd, unsigned long n, unsigned int base);
+
+/**
+ * convert number value to string in given base
+ * @param i long long number to be converted
+ * @param buffer buffer to place the string
+ * @param base base in which to convert the number, up to 36
+ * @return pointer to beginning of buffer
+ */
+char* ft_lltoa_base(long long i, char* buffer, int base);
 
 #endif

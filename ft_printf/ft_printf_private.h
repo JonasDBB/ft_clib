@@ -6,7 +6,6 @@
 #include <stdarg.h>
 
 #define PRINT_BUFFER_SIZE 1024
-#define UNUSED (void)
 
 typedef struct string_data_s {
     char* str;

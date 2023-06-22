@@ -17,14 +17,10 @@
 #define MEMSET_TYPE_SIZE sizeof(MEMSET_TYPE)
 
 typedef enum e_log_level {
-    LOG_DEBUG = 0,
-    LOG_WARN = 1,
-    LOG_ERROR = 2
+    LOG_LVL_DEBUG = 0,
+    LOG_LVL_WARN = 1,
+    LOG_LVL_ERROR = 2
 } log_level;
-
-#ifndef LOG_LEVEL
-#define LOG_LEVEL LOG_DEBUG
-#endif
 
 #define MAX_LOG_SIZE 1024
 #define __FILENAME__ (ft_strrchr(__FILE__, '/') ? ft_strrchr(__FILE__, '/') + 1 : __FILE__)
@@ -50,9 +46,9 @@ void set_log_level(log_level lvl);
  * @param ... variadic arguments
  */
 void log_func(log_level lvl, const char* file, const char* func, int line, const char* fmt, ...);
-#define LOG(fmt, ...) log_func(LOG_DEBUG, __FILENAME__, __FUNCTION__, __LINE__, fmt, ##__VA_ARGS__)
-#define WARN(fmt, ...) log_func(LOG_WARN, __FILENAME__, __FUNCTION__, __LINE__, fmt, ##__VA_ARGS__)
-#define ERROR(fmt, ...) log_func(LOG_ERROR, __FILENAME__, __FUNCTION__, __LINE__, fmt, ##__VA_ARGS__)
+#define LOG(fmt, ...) log_func(LOG_LVL_DEBUG, __FILENAME__, __FUNCTION__, __LINE__, fmt, ##__VA_ARGS__)
+#define WARN(fmt, ...) log_func(LOG_LVL_WARN, __FILENAME__, __FUNCTION__, __LINE__, fmt, ##__VA_ARGS__)
+#define ERROR(fmt, ...) log_func(LOG_LVL_ERROR, __FILENAME__, __FUNCTION__, __LINE__, fmt, ##__VA_ARGS__)
 
 /**
  * get name of errno error

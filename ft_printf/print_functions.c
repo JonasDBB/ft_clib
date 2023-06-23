@@ -32,9 +32,10 @@ void hex_upper(buffer_t* buffer, flags_t flags, va_list ap) {
 }
 
 void character(buffer_t* buffer, flags_t flags, va_list ap) {
-    UNUSED buffer;
     UNUSED flags;
     UNUSED ap;
+    unsigned char chr = (unsigned char)va_arg(ap, int);
+    add_to_buffer(buffer, (char)chr);
 }
 
 void string(buffer_t* buffer, flags_t flags, va_list ap) {

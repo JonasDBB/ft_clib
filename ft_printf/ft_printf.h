@@ -1,6 +1,10 @@
 #ifndef CLIB_TEST_FT_PRINTF_H
 #define CLIB_TEST_FT_PRINTF_H
 
+#ifdef __cplusplus
+#define restrict __restrict
+#endif
+
 int ft_vprintf(const char* restrict format, va_list ap);
 int ft_vfprintf(FILE* restrict stream, const char* restrict format, va_list ap);
 int ft_vsprintf(char* restrict str, const char* restrict format, va_list ap);

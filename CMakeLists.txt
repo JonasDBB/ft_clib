@@ -31,7 +31,7 @@ target_link_options(ft_clib PUBLIC
 add_executable(
 		clib_test
 		ft_clib/clib_test.cpp
-		test.c)
+		)
 target_link_libraries(
 		clib_test
 		GTest::gtest_main
@@ -85,6 +85,6 @@ target_link_libraries(ft_printf ft_clib)
 include(GoogleTest)
 gtest_discover_tests(clib_test)
 
-add_executable(printftest test.c)
+add_executable(printftest printtest.c)
 target_include_directories(printftest PUBLIC ft_printf)
 target_link_libraries(printftest ft_printf)

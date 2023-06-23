@@ -336,13 +336,13 @@ char* ft_lltoa_base(long long i, char* buffer, int base) {
     }
 
     do {
-        *--p = (char)(i < 10 ? i + '0' : i - 10 + 'a');
+        *--p = (char)(i % base < 10 ? i % base + '0' : i % base - 10 + 'a');
         i /= base;
     } while (i != 0);
 
     if (is_negative) {
         *--p = '-';
     }
-    ft_memcpy(buffer, p, buf + MAX_LL_DIGITS + 1 - p);
+    ft_memcpy(buffer, p, buf + MAX_LL_DIGITS + 2 - p);
     return buffer;
 }

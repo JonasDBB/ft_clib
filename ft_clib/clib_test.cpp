@@ -127,15 +127,54 @@ TEST(clib, strrchr) {
 }
 
 TEST(clib, memcmp) {
-
+    char s1[4] = "abc";
+    char s2[4] = "abd";
+    char s3[4] = "aba";
+    char s4[4] = "aba";
+    ASSERT_EQ(ft_memcmp(s3, s4, 3), 0);
+    ASSERT_LT(ft_memcmp(s1, s2, 3), 0);
+    ASSERT_GT(ft_memcmp(s1, s3, 3), 0);
+    ft_bzero(s1, 3);
+    ft_bzero(s2, 3);
+    s1[1] = 'a';
+    s2[1] = 'a';
+    ASSERT_EQ(ft_memcmp(s1, s2, 3), 0);
 }
 
 TEST(clib, strcmp) {
-
+    char s1[4] = "abc";
+    char s2[4] = "abd";
+    char s3[4] = "aba";
+    char s4[4] = "aba";
+    char s5[5] = "abcd";
+    char s6[1] = "";
+    ASSERT_EQ(ft_strcmp(s3, s4), 0);
+    ASSERT_LT(ft_strcmp(s1, s2), 0);
+    ASSERT_GT(ft_strcmp(s1, s3), 0);
+    ASSERT_GT(ft_strcmp(s5, s1), 0);
+    ASSERT_LT(ft_strcmp(s1, s5), 0);
+    ASSERT_GT(ft_strcmp(s1, s6), 0);
+    ASSERT_LT(ft_strcmp(s6, s1), 0);
 }
 
 TEST(clib, strncmp) {
-
+    char s1[4] = "abc";
+    char s2[4] = "abd";
+    char s3[4] = "aba";
+    char s4[4] = "aba";
+    char s5[5] = "abcd";
+    char s6[1] = "";
+    ASSERT_EQ(ft_strncmp(s3, s4, 0), 0);
+    ASSERT_EQ(ft_strncmp(s3, s4, 3), 0);
+    ASSERT_EQ(ft_strncmp(s3, s4, 10), 0);
+    ASSERT_EQ(ft_strncmp(s3, s4, 1), 0);
+    ASSERT_LT(ft_strncmp(s1, s2, 3), 0);
+    ASSERT_LT(ft_strncmp(s1, s2, 10), 0);
+    ASSERT_GT(ft_strncmp(s1, s3, 3), 0);
+    ASSERT_GT(ft_strncmp(s5, s1, 3), 0);
+    ASSERT_LT(ft_strncmp(s1, s5, 3), 0);
+    ASSERT_GT(ft_strncmp(s1, s6, 3), 0);
+    ASSERT_LT(ft_strncmp(s6, s1, 3), 0);
 }
 
 TEST(clib, isnum) {
@@ -299,7 +338,23 @@ TEST(clib, strtol) {
 
 // TODO: write test for ft_write_nr_base
 
-TEST(clib, itoa_base) {
+TEST(clib, lltoa_base) {
     char buf[21];
+    ASSERT_STREQ(ft_lltoa_base(1, buf, 10), "1");
+    ASSERT_STREQ(ft_lltoa_base(-1, buf, 10), "-1");
+    ASSERT_STREQ(ft_lltoa_base(1234, buf, 10), "1234");
+    ASSERT_STREQ(ft_lltoa_base(-4321, buf, 10), "-4321");
+    ASSERT_STREQ(ft_lltoa_base(0, buf, 10), "0");
+    ASSERT_STREQ(ft_lltoa_base(LONG_LONG_MIN, buf, 10), "-9223372036854775808");
+    ASSERT_STREQ(ft_lltoa_base(LONG_LONG_MAX, buf, 10), "9223372036854775807");
+
+    ASSERT_EQ(ft_lltoa_base(1234, buf, 1), nullptr);
+    ASSERT_EQ(ft_lltoa_base(1234, buf, 37), nullptr);
+    ASSERT_EQ(ft_lltoa_base(1234, nullptr, 10), nullptr);
+
+    ASSERT_STREQ(ft_lltoa_base(0x76a53, buf, 16), "76a53");
+    ASSERT_STREQ(ft_lltoa_base(07653, buf, 8), "7653");
+    ASSERT_STREQ(ft_lltoa_base(60466175, buf, 36), "zzzzz");
+    ASSERT_STREQ(ft_lltoa_base(3656158440062975, buf, 36), "zzzzzzzzzz");
 
 }

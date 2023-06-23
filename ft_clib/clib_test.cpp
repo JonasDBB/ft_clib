@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <cerrno>
 #include <climits>
+
 extern "C" {
 #include "ft_clib.h"
 }
@@ -43,7 +44,9 @@ TEST(clib, errnames) {
 TEST(clib, strlen) {
     ASSERT_EQ(ft_strlen(nullptr), 0);
     ASSERT_EQ(ft_strlen("abc"), 3);
-    ASSERT_EQ(ft_strlen("0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789"), 100);
+    ASSERT_EQ(ft_strlen(
+            "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789"),
+              100);
     char str[4];
     str[0] = 'a';
     str[1] = 'b';
@@ -58,7 +61,7 @@ TEST(clib, memset) {
     ASSERT_EQ(ft_memset(nullptr, 50, 50), nullptr);
 
     ASSERT_EQ(ft_memset(arr, 0, 100), arr);
-    for (const char& c : arr) {
+    for (const char& c: arr) {
         ASSERT_EQ(c, 0);
     }
 
@@ -80,7 +83,7 @@ TEST(clib, bzero) {
     char arr[100];
 
     ft_bzero(arr, 100);
-    for (const char& c : arr) {
+    for (const char& c: arr) {
         ASSERT_EQ(c, 0);
     }
 
@@ -242,7 +245,7 @@ TEST(clib, strtol) {
     ASSERT_EQ(errno, EINVAL);
     errno = 0;
     ASSERT_EQ(ft_strtol("+abc", nullptr, 10), 0);
-    char *p = nullptr;
+    char* p = nullptr;
     ASSERT_EQ(ft_strtol(p, nullptr, 10), 0); // to pass NULL while first arg requiring nonnull
     ASSERT_EQ(errno, EINVAL);
     errno = 0;
@@ -322,7 +325,7 @@ TEST(clib, strtol) {
     errno = 0;
 
     // endptr tests
-    char *endptr;
+    char* endptr;
     std::string s = "1234";
     ft_strtol(s.c_str(), &endptr, 10);
     ASSERT_EQ(endptr, s.c_str() + 4);

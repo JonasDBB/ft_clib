@@ -1,5 +1,4 @@
 #include "ft_clib.h"
-#include <time.h>
 #include <errno.h>
 #include <stdbool.h>
 #include <limits.h>

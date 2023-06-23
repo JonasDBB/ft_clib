@@ -328,7 +328,7 @@ char* ft_lltoa_base(long long i, char* buffer, int base) {
 
     char buf[MAX_LL_DIGITS + 2];
     ft_bzero(buf, MAX_LL_DIGITS + 2);
-    char *p = buf + MAX_LL_DIGITS + 1;
+    char* p = buf + MAX_LL_DIGITS + 1;
     bool is_negative = false;
     if (i < 0) {
         is_negative = true;

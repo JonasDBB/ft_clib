@@ -14,7 +14,6 @@ FetchContent_MakeAvailable(googletest)
 enable_testing()
 
 add_library(ft_clib)
-add_subdirectory(ft_clib)
 target_include_directories(ft_clib PUBLIC ft_clib)
 target_compile_options(ft_clib PUBLIC
 		-Wall
@@ -22,25 +21,20 @@ target_compile_options(ft_clib PUBLIC
 		-Wextra
 		-g3
 		-fsanitize=address
-#		--coverage
 		)
 target_link_options(ft_clib PUBLIC
 		-fsanitize=address
 )
 
-add_executable(
-		clib_test
-		ft_clib/clib_test.cpp
-		)
+add_executable(clib_test)
+target_include_directories(clib_test PRIVATE ft_clib)
 target_link_libraries(
 		clib_test
 		GTest::gtest_main
 		ft_clib
-#		gcov
 )
 
 add_library(ft_list)
-add_subdirectory(ft_list)
 target_include_directories(ft_list PUBLIC ft_list)
 target_compile_options(ft_list PUBLIC
 		-Wall
@@ -48,25 +42,20 @@ target_compile_options(ft_list PUBLIC
 		-Wextra
 		-g3
 		-fsanitize=address
-#		--coverage
 		)
 target_link_options(ft_list PUBLIC
 		-fsanitize=address
 		)
 
-add_executable(
-		list_test
-		ft_list/list_test.cpp
-)
+add_executable(list_test)
+target_include_directories(list_test PRIVATE ft_list)
 target_link_libraries(
 		list_test
 		GTest::gtest_main
 		ft_list
-#		gcov
 )
 
 add_library(ft_printf)
-add_subdirectory(ft_printf)
 add_dependencies(ft_printf ft_clib)
 target_include_directories(ft_printf PUBLIC ft_printf)
 target_include_directories(ft_printf PRIVATE ft_clib)
@@ -81,6 +70,18 @@ target_link_options(ft_printf PUBLIC
 		-fsanitize=address
 		)
 target_link_libraries(ft_printf ft_clib)
+
+add_executable(printf_test)
+target_include_directories(printf_test PRIVATE ft_printf)
+target_link_libraries(
+		printf_test
+		GTest::gtest_main
+		ft_printf
+)
+
+add_subdirectory(ft_clib)
+add_subdirectory(ft_list)
+add_subdirectory(ft_printf)
 
 include(GoogleTest)
 gtest_discover_tests(clib_test)

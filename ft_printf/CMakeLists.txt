@@ -5,3 +5,7 @@ target_sources(ft_printf PRIVATE
 		flags.c
 		print_functions.c
 		)
+
+target_sources(printf_test PRIVATE
+		printf_test.cpp
+		)

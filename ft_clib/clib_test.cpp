@@ -212,6 +212,18 @@ TEST(clib, tolower) {
     }
 }
 
+TEST(clib, toupper) {
+    ASSERT_EQ(ft_toupper('a'), 'A');
+    ASSERT_EQ(ft_toupper('z'), 'Z');
+    for (unsigned char c = 0; c < 128; ++c) {
+        if (c >= 'a' && c <= 'z') {
+            ASSERT_EQ(ft_toupper(c), (char)(c + ('A' - 'a')));
+        } else {
+            ASSERT_EQ(ft_toupper(c), c);
+        }
+    }
+}
+
 TEST(clib, isspace) {
     for (unsigned char c = 0; c < 128; ++c) {
         if (c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r' || c == ' ') {

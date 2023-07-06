@@ -154,6 +154,13 @@ bool ft_isalpha(char c);
 char ft_tolower(char c);
 
 /**
+ * convert character to uppercase
+ * @param c character to convert
+ * @return uppercase version of c if c is an lowercase character, unchanged value of c otherwise
+ */
+char ft_toupper(char c);
+
+/**
  * check if c is a whitespace character
  * @param c character to check
  * @return true if c is a whitespace character, false otherwise

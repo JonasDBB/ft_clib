@@ -213,6 +213,10 @@ char ft_tolower(char c) {
     return (char)(c >= 'A' && c <= 'Z' ? c - ('A' - 'a') : c);
 }
 
+char ft_toupper(char c) {
+    return (char)(c >= 'a' && c <= 'z' ? c + ('A' - 'a') : c);
+}
+
 bool ft_isspace(char c) {
     return c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r' || c == ' ';
 }

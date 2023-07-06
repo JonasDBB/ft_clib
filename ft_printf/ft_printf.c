@@ -21,6 +21,9 @@ int ft_vprintf(const char* restrict format, va_list ap) {
 }
 
 int ft_vfprintf(FILE* restrict stream, const char* restrict format, va_list ap) {
+    if (stream == NULL) {
+        return -1;
+    }
     pthread_mutex_lock(&g_lock);
     buffer_t buffer;
     ft_bzero(&buffer, sizeof(buffer));

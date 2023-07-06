@@ -72,7 +72,7 @@ typedef void (*print_func)(buffer_t* buffer, flags_t flags, va_list ap);
 void digit(buffer_t* buffer, flags_t flags, va_list ap);
 void octal(buffer_t* buffer, flags_t flags, va_list ap);
 void unsigned_int(buffer_t* buffer, flags_t flags, va_list ap);
-void hex(buffer_t* buffer, flags_t flags, va_list ap);
+void hex_lower(buffer_t* buffer, flags_t flags, va_list ap);
 void hex_upper(buffer_t* buffer, flags_t flags, va_list ap);
 void character(buffer_t* buffer, flags_t flags, va_list ap);
 void string(buffer_t* buffer, flags_t flags, va_list ap);

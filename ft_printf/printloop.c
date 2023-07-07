@@ -53,7 +53,8 @@ void print_loop(buffer_t* buffer, const char* restrict* format, va_list ap) {
         }
         ++fmt;
         flags_t flags = gather_flags(buffer, &fmt, ap);
-        dbg_print_flags(flags);
+//        dbg_print_flags(flags);
+        UNUSED dbg_print_flags;
         if (buffer->error == true) {
             return;
         }

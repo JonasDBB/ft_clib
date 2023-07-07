@@ -70,6 +70,7 @@ static bool set_precision(const char* restrict* format, va_list ap, flags_t* fla
     if (**format != '.') {
         return false;
     }
+    flags->has_precision = true;
     ++(*format);
     if (**format == '*') {
         int precision_arg = va_arg(ap, int);

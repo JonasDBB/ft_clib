@@ -39,39 +39,36 @@ static long long get_unsigned_digit_arg(flags_t flags, va_list ap) {
         case J:
             return va_arg(ap, uintmax_t);
         case T:
-            return va_arg(ap, ptrdiff_t);
+            return va_arg(ap, size_t);
         case Z:
             return va_arg(ap, size_t);
     }
 }
 
 void digit(buffer_t* buffer, flags_t flags, va_list ap) {
-    UNUSED buffer;
-
     char digit_string[20];
     long long n = get_signed_digit_arg(flags, ap);
     ft_lltoa_base(n, (char*)digit_string, 10);
+    print_nr(buffer, flags, n, digit_string);
 }
 
 void octal(buffer_t* buffer, flags_t flags, va_list ap) {
-    UNUSED buffer;
-
+    // TODO '#' alternate flag
     char digit_string[20];
     long long n = get_signed_digit_arg(flags, ap);
     ft_lltoa_base(n, (char*)digit_string, 8);
+    print_nr(buffer, flags, n, digit_string);
 }
 
 void unsigned_int(buffer_t* buffer, flags_t flags, va_list ap) {
-    UNUSED buffer;
-
     char digit_string[20];
     long long n = get_unsigned_digit_arg(flags, ap);
     ft_lltoa_base(n, (char*)digit_string, 10);
+    print_nr(buffer, flags, n, digit_string);
 }
 
 static void hex(buffer_t* buffer, flags_t flags, va_list ap, bool is_upper) {
-    UNUSED buffer;
-
+    // TODO '#' alternate flag
     char digit_string[20];
     long long n = get_unsigned_digit_arg(flags, ap);
     ft_lltoa_base(n, (char*)digit_string, 16);
@@ -80,6 +77,7 @@ static void hex(buffer_t* buffer, flags_t flags, va_list ap, bool is_upper) {
             digit_string[i] = ft_toupper(digit_string[i]);
         }
     }
+    print_nr(buffer, flags, n, digit_string);
 }
 
 void hex_lower(buffer_t* buffer, flags_t flags, va_list ap) {
@@ -97,12 +95,14 @@ void character(buffer_t* buffer, flags_t flags, va_list ap) {
 }
 
 void string(buffer_t* buffer, flags_t flags, va_list ap) {
+    // TODO
     UNUSED buffer;
     UNUSED flags;
     UNUSED ap;
 }
 
 void pointer(buffer_t* buffer, flags_t flags, va_list ap) {
+    // TODO
     UNUSED buffer;
     UNUSED flags;
     UNUSED ap;

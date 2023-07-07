@@ -4,6 +4,7 @@ target_sources(ft_printf PRIVATE
 		printloop.c
 		flags.c
 		print_functions.c
+		print_number.c
 		)
 
 target_sources(printf_test PRIVATE

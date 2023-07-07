@@ -45,6 +45,7 @@ typedef struct flags_s {
     bool plus;  // '+'
 //    bool dec_conversion; // '''
     size_t field_width; // "123..."
+    bool has_precision; // has precision but with no value
     size_t precision; // ".123..."
     length_mod_t length_mod;
 } flags_t;
@@ -78,5 +79,7 @@ void character(buffer_t* buffer, flags_t flags, va_list ap);
 void string(buffer_t* buffer, flags_t flags, va_list ap);
 void pointer(buffer_t* buffer, flags_t flags, va_list ap);
 void percent(buffer_t* buffer, flags_t flags, va_list ap);
+
+void print_nr(buffer_t* buffer, flags_t flags, long long n, char nr_string[20]);
 
 #endif

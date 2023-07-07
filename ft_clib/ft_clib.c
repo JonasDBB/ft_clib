@@ -4,7 +4,7 @@
 #include <limits.h>
 #include <unistd.h>
 
-static const char* const errnames[] = {
+static const char* const errnames[ELAST] = {
         [0] = 0,
 #ifdef EPERM
         [EPERM] = "EPERM",

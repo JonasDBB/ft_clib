@@ -101,7 +101,6 @@ TEST_F(output_redirect, fd_no_format) {
 
 TEST(printf, string_no_format_with_returns) {
     char buf[20];
-    bzero(buf, 20);
     ft_sprintf(buf, "hoi");
     ASSERT_STREQ(buf, "hoi");
 
@@ -144,36 +143,41 @@ TEST_F(output_redirect, char) {
 
 TEST(printf, string) {
     char buf[20];
+    char* nulp = nullptr;
 
-    bzero(buf, 20);
     ft_sprintf(buf, "%s", "string");
     ASSERT_STREQ(buf, "string");
 
-    bzero(buf, 20);
     ft_sprintf(buf, "%8s", "string");
     ASSERT_STREQ(buf, "  string");
 
-    bzero(buf, 20);
     ft_sprintf(buf, "%-8s", "string");
     ASSERT_STREQ(buf, "string  ");
 
-    bzero(buf, 20);
     ft_sprintf(buf, "%1s", "string");
     ASSERT_STREQ(buf, "string");
 
-    bzero(buf, 20);
     ft_sprintf(buf, "%.2s", "string");
     ASSERT_STREQ(buf, "st");
 
-    bzero(buf, 20);
     ft_sprintf(buf, "%5.2s", "string");
     ASSERT_STREQ(buf, "   st");
 
-    bzero(buf, 20);
     ft_sprintf(buf, "%4.0s", "string");
     ASSERT_STREQ(buf, "    ");
 
-    bzero(buf, 20);
     ft_sprintf(buf, "%5.8s", "string");
     ASSERT_STREQ(buf, "string");
+
+    ft_sprintf(buf, "%s", nulp);
+    ASSERT_STREQ(buf, "(null)");
+
+    ft_sprintf(buf, "%.2s", nulp);
+    ASSERT_STREQ(buf, "(n");
+
+    ft_sprintf(buf, "%-7s", nulp);
+    ASSERT_STREQ(buf, "(null) ");
+
+    ft_snprintf(buf, 3, "%s", nulp);
+    ASSERT_STREQ(buf, "(n");
 }

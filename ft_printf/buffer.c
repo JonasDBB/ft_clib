@@ -36,3 +36,9 @@ void add_to_buffer(buffer_t* buff, char c) {
     ++buff->ret;
     buff->buffer[buff->buffer_size++] = c;
 }
+
+void terminate_string_buffer(buffer_t* buff) {
+    if (buff->is_string) {
+        buff->str_data.str[buff->str_data.str_index++] = '\0';
+    }
+}

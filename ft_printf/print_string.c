@@ -2,7 +2,11 @@
 #include "ft_clib.h"
 
 void print_string(buffer_t* buffer, flags_t flags, char* string) {
-    size_t len = ft_strlen(string);
+    char* str = "(null)";
+    if (string != NULL) {
+        str = string;
+    }
+    size_t len = ft_strlen(str);
     if (flags.has_precision && flags.precision < len) {
         len = flags.precision;
     }
@@ -18,7 +22,7 @@ void print_string(buffer_t* buffer, flags_t flags, char* string) {
     }
 
     for (size_t i = 0; i < len; ++i) {
-        add_to_buffer(buffer, string[i]);
+        add_to_buffer(buffer, str[i]);
     }
 
     while (padding_amnt && flags.minus) {

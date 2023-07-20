@@ -371,5 +371,23 @@ TEST(clib, lltoa_base) {
     ASSERT_STREQ(ft_lltoa_base(07653, buf, 8), "7653");
     ASSERT_STREQ(ft_lltoa_base(60466175, buf, 36), "zzzzz");
     ASSERT_STREQ(ft_lltoa_base(3656158440062975, buf, 36), "zzzzzzzzzz");
+}
 
+TEST(clib, ulltoa_base) {
+    char buf[21];
+    ASSERT_STREQ(ft_ulltoa_base(1, buf, 10), "1");
+    ASSERT_STREQ(ft_ulltoa_base(-1, buf, 10), "18446744073709551615");
+    ASSERT_STREQ(ft_ulltoa_base(1234, buf, 10), "1234");
+    ASSERT_STREQ(ft_ulltoa_base(-4321, buf, 10), "18446744073709547295");
+    ASSERT_STREQ(ft_ulltoa_base(0, buf, 10), "0");
+    ASSERT_STREQ(ft_ulltoa_base(ULONG_LONG_MAX, buf, 10), "18446744073709551615");
+
+    ASSERT_EQ(ft_ulltoa_base(1234, buf, 1), nullptr);
+    ASSERT_EQ(ft_ulltoa_base(1234, buf, 37), nullptr);
+    ASSERT_EQ(ft_ulltoa_base(1234, nullptr, 10), nullptr);
+
+    ASSERT_STREQ(ft_ulltoa_base(0x76a53, buf, 16), "76a53");
+    ASSERT_STREQ(ft_ulltoa_base(07653, buf, 8), "7653");
+    ASSERT_STREQ(ft_ulltoa_base(60466175, buf, 36), "zzzzz");
+    ASSERT_STREQ(ft_ulltoa_base(3656158440062975, buf, 36), "zzzzzzzzzz");
 }

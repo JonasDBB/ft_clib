@@ -181,3 +181,24 @@ TEST(printf, string) {
     ft_snprintf(buf, 3, "%s", nulp);
     ASSERT_STREQ(buf, "(n");
 }
+
+TEST(printf, pointer) {
+    char buf[30];
+    char control[30];
+    void* p = nullptr;
+
+    ft_sprintf(buf, "%p", &p);
+    sprintf(control, "%p", &p);
+    ASSERT_STREQ(buf, control);
+
+    ft_sprintf(buf, "%p", p);
+    ASSERT_STREQ(buf, "0x0");
+
+    ft_sprintf(buf, "%20p", &p);
+    sprintf(control, "%20p", &p);
+    ASSERT_STREQ(buf, control);
+
+    ft_sprintf(buf, "%-20p", &p);
+    sprintf(control, "%-20p", &p);
+    ASSERT_STREQ(buf, control);
+}

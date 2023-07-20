@@ -70,15 +70,11 @@ void unsigned_int(buffer_t* buffer, flags_t flags, va_list ap) {
     print_unr(buffer, flags, n, digit_string);
 }
 
-static void hex(buffer_t* buffer, flags_t flags, va_list ap, bool is_upper) {
+static void hex(buffer_t* buffer, flags_t flags, va_list ap) {
     char digit_string[22];
     unsigned long long n = get_unsigned_digit_arg(flags, ap);
-    if ((flags.alternate && n != 0) || flags.conversion == POINTER) {
-        add_to_buffer(buffer, '0');
-        add_to_buffer(buffer, is_upper ? 'X' : 'x');
-    }
     ft_ulltoa_base(n, (char*)digit_string, 16);
-    if (is_upper) {
+    if (flags.conversion == HEX_UPPER) {
         for (size_t i = 0; i < 20 && digit_string[i] != 0; ++i) {
             digit_string[i] = ft_toupper(digit_string[i]);
         }
@@ -87,11 +83,13 @@ static void hex(buffer_t* buffer, flags_t flags, va_list ap, bool is_upper) {
 }
 
 void hex_lower(buffer_t* buffer, flags_t flags, va_list ap) {
-    hex(buffer, flags, ap, false);
+    flags.conversion = HEX;
+    hex(buffer, flags, ap);
 }
 
 void hex_upper(buffer_t* buffer, flags_t flags, va_list ap) {
-    hex(buffer, flags, ap, true);
+    flags.conversion = HEX_UPPER;
+    hex(buffer, flags, ap);
 }
 
 void character(buffer_t* buffer, flags_t flags, va_list ap) {
@@ -107,7 +105,10 @@ void string(buffer_t* buffer, flags_t flags, va_list ap) {
 void pointer(buffer_t* buffer, flags_t flags, va_list ap) {
     flags.conversion = POINTER;
     flags.alternate = false;
-    hex(buffer, flags, ap, false);
+    flags.has_precision = false;
+    flags.precision = 0;
+    flags.zero = false;
+    hex(buffer, flags, ap);
 }
 
 void percent(buffer_t* buffer, flags_t flags, va_list ap) {

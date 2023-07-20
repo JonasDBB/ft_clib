@@ -102,10 +102,7 @@ void character(buffer_t* buffer, flags_t flags, va_list ap) {
 }
 
 void string(buffer_t* buffer, flags_t flags, va_list ap) {
-    // TODO
-    UNUSED buffer;
-    UNUSED flags;
-    UNUSED ap;
+    print_string(buffer, flags, va_arg(ap, char*));
 }
 
 void pointer(buffer_t* buffer, flags_t flags, va_list ap) {

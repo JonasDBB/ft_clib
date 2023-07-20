@@ -82,5 +82,6 @@ void pointer(buffer_t* buffer, flags_t flags, va_list ap);
 void percent(buffer_t* buffer, flags_t flags, va_list ap);
 
 void print_nr(buffer_t* buffer, flags_t flags, long long n, char nr_string[20]);
+void print_string(buffer_t* buffer, flags_t flags, char* string);
 
 #endif

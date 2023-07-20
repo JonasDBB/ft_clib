@@ -2,12 +2,8 @@
 #include "ft_clib.h"
 
 void print_string(buffer_t* buffer, flags_t flags, char* string) {
-    UNUSED buffer;
-    UNUSED flags;
-    UNUSED string;
-
     size_t len = ft_strlen(string);
-    if (flags.precision < len) {
+    if (flags.has_precision && flags.precision < len) {
         len = flags.precision;
     }
 

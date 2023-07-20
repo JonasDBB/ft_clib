@@ -76,6 +76,16 @@ protected:
         return file_content(tmp2_filename);
 
     }
+
+    void reset_file1() {
+        close(_file1);
+        std::remove(tmp1_filename);
+        _file1 = open(tmp1_filename, O_CREAT | O_RDWR, 0777);
+        if (_file1 == -1) {
+            ERROR("files didn't open correctly");
+            abort();
+        }
+    }
 };
 
 TEST_F(output_redirect, fd_no_format) {
@@ -113,4 +123,57 @@ TEST_F(output_redirect, return_values) {
 
     FILE* f{};
     ASSERT_EQ(ft_fprintf(f, "123"), -1);
+}
+
+TEST_F(output_redirect, char) {
+    ft_dprintf(_file1, "%c", 'a');
+    ASSERT_EQ(file1_content(), "a");
+    reset_file1();
+
+    ft_dprintf(_file1, "%c", '\n');
+    ASSERT_EQ(file1_content(), "\n");
+    reset_file1();
+
+    ft_dprintf(_file1, "%c", 42);
+    ASSERT_EQ(file1_content(), "*");
+    reset_file1();
+
+    ft_dprintf(_file1, "%%");
+    ASSERT_EQ(file1_content(), "%");
+}
+
+TEST(printf, string) {
+    char buf[20];
+
+    bzero(buf, 20);
+    ft_sprintf(buf, "%s", "string");
+    ASSERT_STREQ(buf, "string");
+
+    bzero(buf, 20);
+    ft_sprintf(buf, "%8s", "string");
+    ASSERT_STREQ(buf, "  string");
+
+    bzero(buf, 20);
+    ft_sprintf(buf, "%-8s", "string");
+    ASSERT_STREQ(buf, "string  ");
+
+    bzero(buf, 20);
+    ft_sprintf(buf, "%1s", "string");
+    ASSERT_STREQ(buf, "string");
+
+    bzero(buf, 20);
+    ft_sprintf(buf, "%.2s", "string");
+    ASSERT_STREQ(buf, "st");
+
+    bzero(buf, 20);
+    ft_sprintf(buf, "%5.2s", "string");
+    ASSERT_STREQ(buf, "   st");
+
+    bzero(buf, 20);
+    ft_sprintf(buf, "%4.0s", "string");
+    ASSERT_STREQ(buf, "    ");
+
+    bzero(buf, 20);
+    ft_sprintf(buf, "%5.8s", "string");
+    ASSERT_STREQ(buf, "string");
 }

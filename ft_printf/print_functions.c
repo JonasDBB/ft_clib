@@ -25,6 +25,9 @@ static long long get_signed_digit_arg(flags_t flags, va_list ap) {
 }
 
 static long long get_unsigned_digit_arg(flags_t flags, va_list ap) {
+    if (flags.conversion == POINTER) {
+        return va_arg(ap, unsigned long);
+    }
     switch (flags.length_mod) {
         case NONE:
             return va_arg(ap, unsigned int);
@@ -53,7 +56,8 @@ void digit(buffer_t* buffer, flags_t flags, va_list ap) {
 }
 
 void octal(buffer_t* buffer, flags_t flags, va_list ap) {
-    // TODO '#' alternate flag
+    // TODO: alternate flag which sucks here
+    flags.conversion = OCTAL;
     char digit_string[20];
     long long n = get_signed_digit_arg(flags, ap);
     ft_lltoa_base(n, (char*)digit_string, 8);
@@ -68,9 +72,12 @@ void unsigned_int(buffer_t* buffer, flags_t flags, va_list ap) {
 }
 
 static void hex(buffer_t* buffer, flags_t flags, va_list ap, bool is_upper) {
-    // TODO '#' alternate flag
     char digit_string[20];
     long long n = get_unsigned_digit_arg(flags, ap);
+    if ((flags.alternate && n != 0) || flags.conversion == POINTER) {
+        add_to_buffer(buffer, '0');
+        add_to_buffer(buffer, is_upper ? 'X' : 'x');
+    }
     ft_lltoa_base(n, (char*)digit_string, 16);
     if (is_upper) {
         for (size_t i = 0; i < 20 && digit_string[i] != 0; ++i) {
@@ -102,10 +109,9 @@ void string(buffer_t* buffer, flags_t flags, va_list ap) {
 }
 
 void pointer(buffer_t* buffer, flags_t flags, va_list ap) {
-    // TODO
-    UNUSED buffer;
-    UNUSED flags;
-    UNUSED ap;
+    flags.conversion = POINTER;
+    flags.alternate = false;
+    hex(buffer, flags, ap, false);
 }
 
 void percent(buffer_t* buffer, flags_t flags, va_list ap) {

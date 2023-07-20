@@ -91,7 +91,7 @@ TEST_F(output_redirect, fd_no_format) {
 
 TEST(printf, string_no_format_with_returns) {
     char buf[20];
-    ft_bzero(buf, 20);
+    bzero(buf, 20);
     ft_sprintf(buf, "hoi");
     ASSERT_STREQ(buf, "hoi");
 

@@ -37,19 +37,6 @@ typedef enum length_mod_e {
     Z  // ssize_t / size_t
 } length_mod_t;
 
-typedef struct flags_s {
-    bool alternate; // '#'
-    bool zero;  // '0'
-    bool minus; // '-'
-    bool space; // ' '
-    bool plus;  // '+'
-//    bool dec_conversion; // '''
-    size_t field_width; // "123..."
-    bool has_precision; // has precision but with no value
-    size_t precision; // ".123..."
-    length_mod_t length_mod;
-} flags_t;
-
 typedef enum type_specifier_e {
     DIGIT = 'd',
     DIGIT_ = 'i',
@@ -62,6 +49,20 @@ typedef enum type_specifier_e {
     POINTER = 'p', // same as %#x
     PERCENT = '%'
 } conversion_t;
+
+typedef struct flags_s {
+    bool alternate; // '#'
+    bool zero;  // '0'
+    bool minus; // '-'
+    bool space; // ' '
+    bool plus;  // '+'
+//    bool dec_conversion; // '''
+    size_t field_width; // "123..."
+    bool has_precision; // has precision but with no value
+    size_t precision; // ".123..."
+    length_mod_t length_mod;
+    conversion_t conversion;
+} flags_t;
 
 void flush(buffer_t* buff);
 void add_to_buffer(buffer_t* buff, char c);

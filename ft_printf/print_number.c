@@ -45,8 +45,12 @@ void print_nr(buffer_t* buffer, flags_t flags, long long n, char nr_string[20]) 
     size_t extra_precision = get_extra_precision(flags, &len, n);
     char prepend = prepend_char(flags, &len, n);
     bool is_no_precision_zero = no_precision_zero(flags, &len, n);
+    bool octal_zero = flags.conversion == OCTAL && flags.alternate && (n != 0 || is_no_precision_zero || flags.field_width);
 
-    const char pad = flags.zero ? '0' : ' ';
+    if (octal_zero) {
+        ++len;
+    }
+    const char pad = flags.zero && n != 0 ? '0' : ' ';
     while (!flags.minus && len < flags.field_width) {
         add_to_buffer(buffer, pad);
         --flags.field_width;
@@ -54,6 +58,10 @@ void print_nr(buffer_t* buffer, flags_t flags, long long n, char nr_string[20]) 
 
     if (prepend != -1) {
         add_to_buffer(buffer, prepend);
+    }
+
+    if (octal_zero) {
+        add_to_buffer(buffer, '0');
     }
 
     while (extra_precision-- != 0) {

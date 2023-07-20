@@ -56,7 +56,6 @@ void digit(buffer_t* buffer, flags_t flags, va_list ap) {
 }
 
 void octal(buffer_t* buffer, flags_t flags, va_list ap) {
-    // TODO: alternate flag which sucks here
     flags.conversion = OCTAL;
     char digit_string[20];
     long long n = get_signed_digit_arg(flags, ap);

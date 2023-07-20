@@ -49,7 +49,7 @@ static long long get_unsigned_digit_arg(flags_t flags, va_list ap) {
 }
 
 void digit(buffer_t* buffer, flags_t flags, va_list ap) {
-    char digit_string[20];
+    char digit_string[21];
     long long n = get_signed_digit_arg(flags, ap);
     ft_lltoa_base(n, (char*)digit_string, 10);
     print_nr(buffer, flags, n, digit_string);
@@ -57,33 +57,33 @@ void digit(buffer_t* buffer, flags_t flags, va_list ap) {
 
 void octal(buffer_t* buffer, flags_t flags, va_list ap) {
     flags.conversion = OCTAL;
-    char digit_string[20];
-    long long n = get_signed_digit_arg(flags, ap);
-    ft_lltoa_base(n, (char*)digit_string, 8);
-    print_nr(buffer, flags, n, digit_string);
+    char digit_string[21];
+    unsigned long long n = get_unsigned_digit_arg(flags, ap);
+    ft_ulltoa_base(n, (char*)digit_string, 8);
+    print_unr(buffer, flags, n, digit_string);
 }
 
 void unsigned_int(buffer_t* buffer, flags_t flags, va_list ap) {
-    char digit_string[20];
-    long long n = get_unsigned_digit_arg(flags, ap);
-    ft_lltoa_base(n, (char*)digit_string, 10);
-    print_nr(buffer, flags, n, digit_string);
+    char digit_string[21];
+    unsigned long long n = get_unsigned_digit_arg(flags, ap);
+    ft_ulltoa_base(n, (char*)digit_string, 10);
+    print_unr(buffer, flags, n, digit_string);
 }
 
 static void hex(buffer_t* buffer, flags_t flags, va_list ap, bool is_upper) {
-    char digit_string[20];
-    long long n = get_unsigned_digit_arg(flags, ap);
+    char digit_string[22];
+    unsigned long long n = get_unsigned_digit_arg(flags, ap);
     if ((flags.alternate && n != 0) || flags.conversion == POINTER) {
         add_to_buffer(buffer, '0');
         add_to_buffer(buffer, is_upper ? 'X' : 'x');
     }
-    ft_lltoa_base(n, (char*)digit_string, 16);
+    ft_ulltoa_base(n, (char*)digit_string, 16);
     if (is_upper) {
         for (size_t i = 0; i < 20 && digit_string[i] != 0; ++i) {
             digit_string[i] = ft_toupper(digit_string[i]);
         }
     }
-    print_nr(buffer, flags, n, digit_string);
+    print_unr(buffer, flags, n, digit_string);
 }
 
 void hex_lower(buffer_t* buffer, flags_t flags, va_list ap) {

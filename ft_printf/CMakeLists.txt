@@ -5,6 +5,7 @@ target_sources(ft_printf PRIVATE
 		flags.c
 		print_dispatcher.c
 		print_number.c
+		print_unsigned_number.c
 		print_string.c
 		)
 

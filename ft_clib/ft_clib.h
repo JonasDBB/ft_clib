@@ -190,8 +190,17 @@ void ft_write_nr_base(int fd, unsigned long n, unsigned int base);
  * @param i long long number to be converted
  * @param buffer buffer to place the string
  * @param base base in which to convert the number, up to 36
- * @return pointer to beginning of buffer
+ * @return pointer to beginning of buffer or NULL in case of error
  */
 char* ft_lltoa_base(long long i, char* buffer, int base);
+
+/**
+ * convert unsigned number value to string in given base
+ * @param i unsigned long long number to be converted
+ * @param buffer buffer to place the string
+ * @param base base in which to convert the number, up to 36
+ * @return pointer to beginning of buffer or NULL in case of error
+ */
+char* ft_ulltoa_base(unsigned long long i, char* buffer, int base);
 
 #endif

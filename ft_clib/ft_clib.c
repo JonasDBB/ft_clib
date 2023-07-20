@@ -349,3 +349,22 @@ char* ft_lltoa_base(long long i, char* buffer, int base) {
     ft_memcpy(buffer, p, buf + MAX_LL_DIGITS + 2 - p);
     return buffer;
 }
+
+char* ft_ulltoa_base(unsigned long long i, char* buffer, int base) {
+    if ((base != 0 && (base < 2 || base > 36)) || !buffer) {
+        errno = EINVAL;
+        return NULL;
+    }
+
+    char buf[MAX_LL_DIGITS + 2];
+    ft_bzero(buf, MAX_LL_DIGITS + 2);
+    char* p = buf + MAX_LL_DIGITS + 1;
+
+    do {
+        *--p = (char)(i % base < 10 ? i % base + '0' : i % base - 10 + 'a');
+        i /= base;
+    } while (i != 0);
+
+    ft_memcpy(buffer, p, buf + MAX_LL_DIGITS + 2 - p);
+    return buffer;
+}

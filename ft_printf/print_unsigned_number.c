@@ -29,6 +29,14 @@ static bool has_0x_prefix(flags_t flags, unsigned long long n) {
     return false;
 }
 
+static void pre_padding(buffer_t* buffer, flags_t* flags, size_t len, unsigned long long n) {
+    const char pad = flags->zero && n != 0 ? '0' : ' ';
+    while (!flags->minus && len < flags->field_width) {
+        add_to_buffer(buffer, pad);
+        --flags->field_width;
+    }
+}
+
 void print_unr(buffer_t* buffer, flags_t flags, unsigned long long n, char nr_string[20]) {
     size_t len = ft_strlen(nr_string);
     size_t extra_precision = get_extra_precision(flags, &len);
@@ -45,10 +53,8 @@ void print_unr(buffer_t* buffer, flags_t flags, unsigned long long n, char nr_st
             flags.field_width -= 2;
         }
     }
-    const char pad = flags.zero && n != 0 ? '0' : ' ';
-    while (!flags.minus && len < flags.field_width) {
-        add_to_buffer(buffer, pad);
-        --flags.field_width;
+    if (!has_0x_prefix(flags, n) || !flags.zero) {
+        pre_padding(buffer, &flags, len, n);
     }
 
     if (octal_zero) {
@@ -58,6 +64,9 @@ void print_unr(buffer_t* buffer, flags_t flags, unsigned long long n, char nr_st
     if (has_0x_prefix(flags, n)) {
         add_to_buffer(buffer, '0');
         add_to_buffer(buffer, flags.conversion == HEX_UPPER ? 'X' : 'x');
+        if (flags.zero) {
+            pre_padding(buffer, &flags, len, n);
+        }
     }
 
     while (extra_precision-- != 0) {

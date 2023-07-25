@@ -317,3 +317,84 @@ TEST(printf, unsigned_decimal) {
     ft_sprintf(buf, "%zu", SIZE_T_MAX);
     ASSERT_STREQ(buf, "18446744073709551615");
 }
+
+TEST(printf, hex_lower) {
+    char buf[30];
+
+    ft_sprintf(buf, "%x", 5);
+    ASSERT_STREQ(buf, "5");
+
+    ft_sprintf(buf, "%x", 0xa5);
+    ASSERT_STREQ(buf, "a5");
+
+    ft_sprintf(buf, "%#x", 0xabcdef);
+    ASSERT_STREQ(buf, "0xabcdef");
+
+    ft_sprintf(buf, "%#x", 5);
+    ASSERT_STREQ(buf, "0x5");
+
+    ft_sprintf(buf, "%x", UINT_MAX);
+    ASSERT_STREQ(buf, "ffffffff");
+
+    ft_sprintf(buf, "%10x", 0xabc12);
+    ASSERT_STREQ(buf, "     abc12");
+
+    ft_sprintf(buf, "%010x", 0xabc12);
+    ASSERT_STREQ(buf, "00000abc12");
+
+    ft_sprintf(buf, "%0#10x", 0xabc12);
+    ASSERT_STREQ(buf, "0x000abc12");
+
+    ft_sprintf(buf, "%#10.7x", 0xabc12);
+    ASSERT_STREQ(buf, " 0x00abc12");
+
+    ft_sprintf(buf, "%#-10x", 0xabc12);
+    ASSERT_STREQ(buf, "0xabc12   ");
+
+    ft_sprintf(buf, "%#-10.7x", 0xabc12);
+    ASSERT_STREQ(buf, "0x00abc12 ");
+
+    ft_sprintf(buf, "%#x", 0xabc12);
+    ASSERT_STREQ(buf, "0xabc12");
+}
+TEST(printf, hex_upper) {
+    char buf[30];
+
+    ft_sprintf(buf, "%X", 5);
+    ASSERT_STREQ(buf, "5");
+
+    ft_sprintf(buf, "%X", 0xa5);
+    ASSERT_STREQ(buf, "A5");
+
+    ft_sprintf(buf, "%#X", 0xabcdef);
+    ASSERT_STREQ(buf, "0XABCDEF");
+
+    ft_sprintf(buf, "%#X", 5);
+    ASSERT_STREQ(buf, "0X5");
+
+    ft_sprintf(buf, "%X", UINT_MAX);
+    ASSERT_STREQ(buf, "FFFFFFFF");
+
+    ft_sprintf(buf, "%10X", 0xabc12);
+    ASSERT_STREQ(buf, "     ABC12");
+
+    ft_sprintf(buf, "%010X", 0xabc12);
+    ASSERT_STREQ(buf, "00000ABC12");
+
+    ft_sprintf(buf, "%0#10X", 0xabc12);
+    ASSERT_STREQ(buf, "0X000ABC12");
+
+    ft_sprintf(buf, "%#10.7X", 0xabc12);
+    ASSERT_STREQ(buf, " 0X00ABC12");
+
+    ft_sprintf(buf, "%#-10X", 0xabc12);
+    ASSERT_STREQ(buf, "0XABC12   ");
+
+    ft_sprintf(buf, "%#-10.7X", 0xabc12);
+    ASSERT_STREQ(buf, "0X00ABC12 ");
+
+    ft_sprintf(buf, "%#X", 0xabc12);
+    ASSERT_STREQ(buf, "0XABC12");
+}
+
+// TODO: nr tests with 0

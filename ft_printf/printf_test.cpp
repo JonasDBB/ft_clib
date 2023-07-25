@@ -188,18 +188,18 @@ TEST(printf, pointer) {
     void* p = nullptr;
 
     ft_sprintf(buf, "%p", &p);
-    sprintf(control, "%p", &p);
+    ft_sprintf(control, "%p", &p);
     ASSERT_STREQ(buf, control);
 
     ft_sprintf(buf, "%p", p);
     ASSERT_STREQ(buf, "0x0");
 
     ft_sprintf(buf, "%20p", &p);
-    sprintf(control, "%20p", &p);
+    ft_sprintf(control, "%20p", &p);
     ASSERT_STREQ(buf, control);
 
     ft_sprintf(buf, "%-20p", &p);
-    sprintf(control, "%-20p", &p);
+    ft_sprintf(control, "%-20p", &p);
     ASSERT_STREQ(buf, control);
 }
 
@@ -266,4 +266,54 @@ TEST(printf, signed_decimal) {
 
     ft_sprintf(buf, "%-+10.5d", 123);
     ASSERT_STREQ(buf, "+00123    ");
+
+    ft_sprintf(buf, "%*.*d", 10, 5, 123);
+    ASSERT_STREQ(buf, "     00123");
+}
+
+TEST(printf, unsigned_decimal) {
+    char buf[30];
+
+    ft_sprintf(buf, "%u", 5);
+    ASSERT_STREQ(buf, "5");
+
+    ft_sprintf(buf, "%u", UINT_MAX);
+    ASSERT_STREQ(buf, "4294967295");
+
+    ft_sprintf(buf, "%llu", ULONG_LONG_MAX);
+    ASSERT_STREQ(buf, "18446744073709551615");
+
+    // overflow short short (char)
+    ft_sprintf(buf, "%hhu", 257);
+    ASSERT_STREQ(buf, "1");
+
+    ft_sprintf(buf, "a% u", 123);
+    ASSERT_STREQ(buf, "a123");
+
+    ft_sprintf(buf, "%+u", 123);
+    ASSERT_STREQ(buf, "123");
+
+    ft_sprintf(buf, "%05u", 123);
+    ASSERT_STREQ(buf, "00123");
+
+    ft_sprintf(buf, "%-5u", 123);
+    ASSERT_STREQ(buf, "123  ");
+
+    ft_sprintf(buf, "%-05u", 123);
+    ASSERT_STREQ(buf, "123  ");
+
+    ft_sprintf(buf, "%.6u", 123);
+    ASSERT_STREQ(buf, "000123");
+
+    ft_sprintf(buf, "%10.5u", 123);
+    ASSERT_STREQ(buf, "     00123");
+
+    ft_sprintf(buf, "%-10.5u", 123);
+    ASSERT_STREQ(buf, "00123     ");
+
+    ft_sprintf(buf, "%-10.5u", 123);
+    ASSERT_STREQ(buf, "00123     ");
+
+    ft_sprintf(buf, "%zu", SIZE_T_MAX);
+    ASSERT_STREQ(buf, "18446744073709551615");
 }

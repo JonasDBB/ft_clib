@@ -13,10 +13,9 @@ static size_t get_extra_precision(flags_t flags, size_t* len, long long n) {
     return ret;
 }
 
-static char prepend_char(flags_t flags, size_t* len, long long n) {
+static char prepend_char(flags_t flags, long long n) {
     char ret = -1;
     if (n >= 0 && (flags.plus || flags.space)) {
-        ++(*len);
         if (flags.plus) {
             ret = '+';
         } else if (flags.space) {
@@ -43,13 +42,13 @@ static bool no_precision_zero(flags_t flags, size_t* len, long long n) {
 void print_nr(buffer_t* buffer, flags_t flags, long long n, char nr_string[20]) {
     size_t len = ft_strlen(nr_string);
     size_t extra_precision = get_extra_precision(flags, &len, n);
-    char prepend = prepend_char(flags, &len, n);
+    char prepend = prepend_char(flags, n);
     bool is_no_precision_zero = no_precision_zero(flags, &len, n);
-    bool octal_zero = flags.conversion == OCTAL && flags.alternate && (n != 0 || is_no_precision_zero || flags.field_width);
 
-    if (octal_zero) {
+    if (prepend != -1) {
         ++len;
     }
+
     const char pad = flags.zero && n != 0 ? '0' : ' ';
     while (!flags.minus && len < flags.field_width) {
         add_to_buffer(buffer, pad);
@@ -58,10 +57,6 @@ void print_nr(buffer_t* buffer, flags_t flags, long long n, char nr_string[20]) 
 
     if (prepend != -1) {
         add_to_buffer(buffer, prepend);
-    }
-
-    if (octal_zero) {
-        add_to_buffer(buffer, '0');
     }
 
     while (extra_precision-- != 0) {

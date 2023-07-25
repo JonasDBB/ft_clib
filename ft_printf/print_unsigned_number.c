@@ -10,10 +10,9 @@ static size_t get_extra_precision(flags_t flags, size_t* len) {
     return ret;
 }
 
-static char prepend_char(flags_t flags, size_t* len) {
+static char prepend_char(flags_t flags) {
     char ret = -1;
     if (flags.plus || flags.space) {
-        ++(*len);
         if (flags.plus) {
             ret = '+';
         } else if (flags.space) {
@@ -46,9 +45,13 @@ static bool has_0x_prefix(flags_t flags, unsigned long long n) {
 void print_unr(buffer_t* buffer, flags_t flags, unsigned long long n, char nr_string[20]) {
     size_t len = ft_strlen(nr_string);
     size_t extra_precision = get_extra_precision(flags, &len);
-    char prepend = prepend_char(flags, &len);
+    char prepend = prepend_char(flags);
     bool is_no_precision_zero = no_precision_zero(flags, &len, n);
     bool octal_zero = flags.conversion == OCTAL && flags.alternate && (n != 0 || is_no_precision_zero || flags.field_width);
+
+    if (prepend != -1) {
+        ++len;
+    }
 
     if (octal_zero) {
         ++len;

@@ -202,3 +202,68 @@ TEST(printf, pointer) {
     sprintf(control, "%-20p", &p);
     ASSERT_STREQ(buf, control);
 }
+
+TEST(printf, signed_decimal) {
+    char buf[30];
+
+    ft_sprintf(buf, "%i", 5);
+    ASSERT_STREQ(buf, "5");
+
+    ft_sprintf(buf, "%d", -98);
+    ASSERT_STREQ(buf, "-98");
+
+    ft_sprintf(buf, "%d", INT_MAX);
+    ASSERT_STREQ(buf, "2147483647");
+
+    ft_sprintf(buf, "%lld", LONG_LONG_MIN);
+    ASSERT_STREQ(buf, "-9223372036854775808");
+
+    // overflow short short (char)
+    ft_sprintf(buf, "%hhd", 130);
+    ASSERT_STREQ(buf, "-126");
+
+    ft_sprintf(buf, "a% d", 123);
+    ASSERT_STREQ(buf, "a 123");
+
+    ft_sprintf(buf, "a% d", -123);
+    ASSERT_STREQ(buf, "a-123");
+
+    ft_sprintf(buf, "%+d", 123);
+    ASSERT_STREQ(buf, "+123");
+
+    ft_sprintf(buf, "%+d", -123);
+    ASSERT_STREQ(buf, "-123");
+
+    ft_sprintf(buf, "a% +d", 123);
+    ASSERT_STREQ(buf, "a+123");
+
+    ft_sprintf(buf, "%05d", 123);
+    ASSERT_STREQ(buf, "00123");
+
+    ft_sprintf(buf, "%-5d", 123);
+    ASSERT_STREQ(buf, "123  ");
+
+    ft_sprintf(buf, "%-05d", 123);
+    ASSERT_STREQ(buf, "123  ");
+
+    ft_sprintf(buf, "%.6d", 123);
+    ASSERT_STREQ(buf, "000123");
+
+    ft_sprintf(buf, "%10.5d", 123);
+    ASSERT_STREQ(buf, "     00123");
+
+    ft_sprintf(buf, "%-10.5d", 123);
+    ASSERT_STREQ(buf, "00123     ");
+
+    ft_sprintf(buf, "%10.5d", -123);
+    ASSERT_STREQ(buf, "    -00123");
+
+    ft_sprintf(buf, "%-10.5d", -123);
+    ASSERT_STREQ(buf, "-00123    ");
+
+    ft_sprintf(buf, "%-+10.5d", 123);
+    ASSERT_STREQ(buf, "+00123    ");
+
+    ft_sprintf(buf, "%-+10.5d", 123);
+    ASSERT_STREQ(buf, "+00123    ");
+}

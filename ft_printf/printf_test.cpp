@@ -397,4 +397,38 @@ TEST(printf, hex_upper) {
     ASSERT_STREQ(buf, "0XABC12");
 }
 
-// TODO: nr tests with 0
+TEST(printf, octal) {
+    char buf[30];
+
+    ft_sprintf(buf, "%o", 5);
+    ASSERT_STREQ(buf, "5");
+
+    ft_sprintf(buf, "%o", 10);
+    ASSERT_STREQ(buf, "12");
+
+    ft_sprintf(buf, "%o", 010);
+    ASSERT_STREQ(buf, "10");
+
+    ft_sprintf(buf, "%o", 06452);
+    ASSERT_STREQ(buf, "6452");
+
+    ft_sprintf(buf, "%#o", 5);
+    ASSERT_STREQ(buf, "05");
+
+    ft_sprintf(buf, "%#8o", 0123);
+    ASSERT_STREQ(buf, "    0123");
+
+    ft_sprintf(buf, "%#08o", 0123);
+    ASSERT_STREQ(buf, "00000123");
+
+    ft_sprintf(buf, "%#-8o", 0123);
+    ASSERT_STREQ(buf, "0123    ");
+
+    ft_sprintf(buf, "%#-8.5o", 0123);
+    ASSERT_STREQ(buf, "00123   ");
+
+    ft_sprintf(buf, "%#-8.o", 0123);
+    ASSERT_STREQ(buf, "0123    ");
+}
+
+// TODO: nr tests with 0 for i/d, u, x/X and o and # flag for x/X/o

@@ -41,7 +41,11 @@ void print_unr(buffer_t* buffer, flags_t flags, unsigned long long n, char nr_st
     size_t len = ft_strlen(nr_string);
     size_t extra_precision = get_extra_precision(flags, &len);
     bool is_no_precision_zero = no_precision_zero(flags, &len, n);
-    bool octal_zero = flags.conversion == OCTAL && flags.alternate && (n != 0 || is_no_precision_zero || flags.field_width);
+    bool octal_zero =
+            flags.conversion == OCTAL &&
+            flags.alternate &&
+            extra_precision == 0 &&
+            (n != 0 || is_no_precision_zero || flags.field_width);
 
     if (octal_zero) {
         ++len;

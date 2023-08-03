@@ -431,4 +431,45 @@ TEST(printf, octal) {
     ASSERT_STREQ(buf, "0123    ");
 }
 
-// TODO: nr tests with 0 for i/d, u, x/X and o and # flag for x/X/o
+TEST(printf, zeros) {
+    char buf[30];
+
+    ft_sprintf(buf, "%d", 0);
+    ASSERT_STREQ(buf, "0");
+
+    ft_sprintf(buf, "%3d", 0);
+    ASSERT_STREQ(buf, "  0");
+
+    ft_sprintf(buf, "%.0d", 0);
+    ASSERT_STREQ(buf, "");
+
+    ft_sprintf(buf, "%2.0d", 0);
+    ASSERT_STREQ(buf, "  ");
+
+    ft_sprintf(buf, "%o", 0);
+    ASSERT_STREQ(buf, "0");
+
+    ft_sprintf(buf, "%3o", 0);
+    ASSERT_STREQ(buf, "  0");
+
+    ft_sprintf(buf, "%.0o", 0);
+    ASSERT_STREQ(buf, "");
+
+    ft_sprintf(buf, "%#o", 0);
+    ASSERT_STREQ(buf, "0");
+
+    ft_sprintf(buf, "%#.0o", 0);
+    ASSERT_STREQ(buf, "0");
+
+    ft_sprintf(buf, "%x", 0);
+    ASSERT_STREQ(buf, "0");
+
+    ft_sprintf(buf, "%.0x", 0);
+    ASSERT_STREQ(buf, "");
+
+    ft_sprintf(buf, "%#x", 0);
+    ASSERT_STREQ(buf, "0");
+
+    ft_sprintf(buf, "%#.0x", 0);
+    ASSERT_STREQ(buf, "");
+}

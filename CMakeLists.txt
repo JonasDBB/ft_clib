@@ -85,7 +85,3 @@ add_subdirectory(ft_printf)
 
 include(GoogleTest)
 gtest_discover_tests(clib_test)
-
-add_executable(printftest printtest.c)
-target_include_directories(printftest PUBLIC ft_printf)
-target_link_libraries(printftest ft_printf)

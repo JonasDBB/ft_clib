@@ -4,6 +4,9 @@
 #ifdef __cplusplus
 #define restrict __restrict
 #endif
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdio.h>
 
 int ft_vprintf(const char* restrict format, va_list ap);
 int ft_vfprintf(FILE* restrict stream, const char* restrict format, va_list ap);

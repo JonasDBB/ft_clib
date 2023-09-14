@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <fstream>
 #include <fcntl.h>
-#include <cstdio>
+#include <climits>
 
 extern "C" {
 #include "ft_clib.h"
@@ -314,7 +314,7 @@ TEST(printf, unsigned_decimal) {
     ft_sprintf(buf, "%-10.5u", 123);
     ASSERT_STREQ(buf, "00123     ");
 
-    ft_sprintf(buf, "%zu", SIZE_T_MAX);
+    ft_sprintf(buf, "%zu", SIZE_MAX);
     ASSERT_STREQ(buf, "18446744073709551615");
 }
 

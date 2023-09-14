@@ -2,6 +2,7 @@
 #include <stdarg.h>
 #include <sys/time.h>
 #include "ft_clib.h"
+#include <time.h>
 
 static const char* const log_colors[] = {
         [LOG_LVL_DEBUG] = CLR_GRN"DBG",

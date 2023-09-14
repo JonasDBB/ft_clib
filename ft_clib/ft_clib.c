@@ -4,6 +4,10 @@
 #include <limits.h>
 #include <unistd.h>
 
+#ifndef ELAST
+#define ELAST 106
+#endif
+
 static const char* const errnames[ELAST] = {
         [0] = 0,
 #ifdef EPERM
@@ -323,7 +327,7 @@ char* ft_lltoa_base(long long i, char* buffer, int base) {
         errno = EINVAL;
         return NULL;
     }
-    if (i == LONG_LONG_MIN) {
+    if (i == LLONG_MIN) {
         ft_memcpy(buffer, "-9223372036854775808", 20);
         buffer[20] = '\0';
         return buffer;

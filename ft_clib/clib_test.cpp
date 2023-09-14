@@ -335,6 +335,16 @@ TEST(clib, strtol) {
     ASSERT_EQ(ft_strtol("-zzzzzzzzzzzzz", nullptr, 36), LONG_MIN);
     ASSERT_EQ(errno, ERANGE);
     errno = 0;
+    ASSERT_EQ(ft_strtol("9223372036854775807", nullptr, 0), LONG_MAX);
+    ASSERT_EQ(errno, 0);
+    ASSERT_EQ(ft_strtol("9223372036854775808", nullptr, 0), LONG_MAX);
+    ASSERT_EQ(errno, ERANGE);
+    errno = 0;
+    ASSERT_EQ(ft_strtol("-9223372036854775808", nullptr, 0), LONG_MIN);
+    ASSERT_EQ(errno, 0);
+    ASSERT_EQ(ft_strtol("-9223372036854775809", nullptr, 0), LONG_MIN);
+    ASSERT_EQ(errno, ERANGE);
+    errno = 0;
 
     // endptr tests
     char* endptr;

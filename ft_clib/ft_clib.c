@@ -246,6 +246,64 @@ static bool is_in_base(char c, int base) {
     return false;
 }
 
+bool is_minimal_overflow(long n, long sign, int digit) {
+    long maxval = sign == 1 ? LONG_MAX : LONG_MIN;
+    long remainder = maxval % 10 * sign;
+    long tenth = maxval / 10 * sign;
+    if (n != tenth) {
+        return false;
+    }
+    return digit > remainder;
+}
+
+static void pre_digit_processing(const char** str, int* base, long* sign) {
+    while (ft_isspace(*(*str))) {
+        ++(*str);
+    }
+    if (*(*str) == '+') {
+        ++(*str);
+    }
+    if (*(*str) == '-') {
+        (*sign) = -1;
+        ++(*str);
+    }
+    if ((*base) == 0) {
+        if (*(*str) == '0') {
+            if (*((*str) + 1) == 'x') {
+                (*base) = 16;
+            } else {
+                (*base) = 8;
+            }
+        } else {
+            (*base) = 10;
+        }
+    }
+    if ((*base) == 16 && *(*str) == '0' && *((*str) + 1) == 'x') {
+        (*str) += 2;
+    }
+}
+
+bool check_and_set_overflows(long sign, const char** str, long* ret) {
+    if (sign == 1 && (*ret) > (LONG_MAX / 10)) {
+        errno = ERANGE;
+        (*ret) = LONG_MAX;
+        while (*(*str)) ++(*str);
+        return false;
+    } else if (sign == -1 && (*ret) > (LONG_MIN / 10) * -1) {
+        errno = ERANGE;
+        (*ret) = LONG_MIN;
+        while (*(*str)) ++(*str);
+        return false;
+    }
+    if (is_minimal_overflow((*ret), sign, char_base_val(*(*str)))) {
+        errno = ERANGE;
+        (*ret) = sign == 1 ? LONG_MAX : LONG_MIN;
+        while (*(*str)) ++(*str);
+        return false;
+    }
+    return true;
+}
+
 long ft_strtol(const char* str, char** endptr, int base) {
     if ((base != 0 && (base < 2 || base > 36)) || !str) {
         errno = EINVAL;
@@ -253,30 +311,7 @@ long ft_strtol(const char* str, char** endptr, int base) {
     }
     long ret = 0;
     long sign = 1;
-    while (ft_isspace(*str)) {
-        ++str;
-    }
-    if (*str == '+') {
-        ++str;
-    }
-    if (*str == '-') {
-        sign = -1;
-        ++str;
-    }
-    if (base == 0) {
-        if (*str == '0') {
-            if (*(str + 1) == 'x') {
-                base = 16;
-            } else {
-                base = 8;
-            }
-        } else {
-            base = 10;
-        }
-    }
-    if (base == 16 && *str == '0' && *(str + 1) == 'x') {
-        str += 2;
-    }
+    pre_digit_processing(&str, &base, &sign);
     if (!is_in_base(ft_tolower(*str), base)) {
         if (endptr != NULL) {
             *endptr = (char*)str;
@@ -285,15 +320,7 @@ long ft_strtol(const char* str, char** endptr, int base) {
         return 0;
     }
     while (is_in_base(ft_tolower(*str), base)) {
-        if (sign == 1 && ret > (LONG_MAX / 10)) {
-            errno = ERANGE;
-            ret = LONG_MAX;
-            while (*str) ++str;
-            break;
-        } else if (sign == -1 && ret > (LONG_MAX / 10) + 1) {
-            errno = ERANGE;
-            ret = LONG_MIN;
-            while (*str) ++str;
+        if (check_and_set_overflows(sign, &str, &ret) == false) {
             break;
         }
         ret = ret * base + char_base_val(*str);
